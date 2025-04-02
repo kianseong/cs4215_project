@@ -5,7 +5,7 @@ import { SimpleLangLexer } from './parser/src/SimpleLangLexer';
 import { ExpressionContext, ProgContext, SimpleLangParser } from './parser/src/SimpleLangParser';
 import { SimpleLangVisitor } from './parser/src/SimpleLangVisitor';
 
-// TEST
+// TEST 2
 class SimpleLangEvaluatorVisitor extends AbstractParseTreeVisitor<number> implements SimpleLangVisitor<number> {
     // Visit a parse tree produced by SimpleLangParser#prog
     visitProg(ctx: ProgContext): number {
