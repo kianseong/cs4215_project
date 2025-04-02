@@ -5,6 +5,7 @@ import { SimpleLangLexer } from './parser/src/SimpleLangLexer';
 import { ExpressionContext, ProgContext, SimpleLangParser } from './parser/src/SimpleLangParser';
 import { SimpleLangVisitor } from './parser/src/SimpleLangVisitor';
 
+// TEST
 class SimpleLangEvaluatorVisitor extends AbstractParseTreeVisitor<number> implements SimpleLangVisitor<number> {
     // Visit a parse tree produced by SimpleLangParser#prog
     visitProg(ctx: ProgContext): number {
@@ -40,7 +41,7 @@ class SimpleLangEvaluatorVisitor extends AbstractParseTreeVisitor<number> implem
                 }
             }
         }
-        
+
         throw new Error(`Invalid expression: ${ctx.getText()}`);
     }
 
@@ -48,7 +49,7 @@ class SimpleLangEvaluatorVisitor extends AbstractParseTreeVisitor<number> implem
     protected defaultResult(): number {
         return 0;
     }
-    
+
     // Override the aggregate result method
     protected aggregateResult(aggregate: number, nextResult: number): number {
         return nextResult;
@@ -73,13 +74,13 @@ export class SimpleLangEvaluator extends BasicEvaluator {
             const lexer = new SimpleLangLexer(inputStream);
             const tokenStream = new CommonTokenStream(lexer);
             const parser = new SimpleLangParser(tokenStream);
-            
+
             // Parse the input
             const tree = parser.prog();
-            
+
             // Evaluate the parsed tree
             const result = this.visitor.visit(tree);
-            
+
             // Send the result to the REPL
             this.conductor.sendOutput(`Result of expression: ${result}`);
         }  catch (error) {
