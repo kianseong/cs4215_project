@@ -1,4 +1,4 @@
-grammar SimpleLang;
+grammar Rust;
 
 prog: expression EOF;
 

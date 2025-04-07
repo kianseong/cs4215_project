@@ -1,17 +1,17 @@
-// Generated from src/SimpleLang.g4 by ANTLR 4.13.1
+// Generated from src/Rust.g4 by ANTLR 4.13.1
 
 import * as antlr from "antlr4ng";
 import { Token } from "antlr4ng";
 
-import { SimpleLangListener } from "./SimpleLangListener.js";
-import { SimpleLangVisitor } from "./SimpleLangVisitor.js";
+import { RustListener } from "./RustListener.js";
+import { RustVisitor } from "./RustVisitor.js";
 
 // for running tests with parameters, TODO: discuss strategy for typed parameters in CI
 // eslint-disable-next-line no-unused-vars
 type int = number;
 
 
-export class SimpleLangParser extends antlr.Parser {
+export class RustParser extends antlr.Parser {
     public static readonly T__0 = 1;
     public static readonly T__1 = 2;
     public static readonly T__2 = 3;
@@ -34,11 +34,11 @@ export class SimpleLangParser extends antlr.Parser {
         "prog", "expression",
     ];
 
-    public get grammarFileName(): string { return "SimpleLang.g4"; }
-    public get literalNames(): (string | null)[] { return SimpleLangParser.literalNames; }
-    public get symbolicNames(): (string | null)[] { return SimpleLangParser.symbolicNames; }
-    public get ruleNames(): string[] { return SimpleLangParser.ruleNames; }
-    public get serializedATN(): number[] { return SimpleLangParser._serializedATN; }
+    public get grammarFileName(): string { return "Rust.g4"; }
+    public get literalNames(): (string | null)[] { return RustParser.literalNames; }
+    public get symbolicNames(): (string | null)[] { return RustParser.symbolicNames; }
+    public get ruleNames(): string[] { return RustParser.ruleNames; }
+    public get serializedATN(): number[] { return RustParser._serializedATN; }
 
     protected createFailedPredicateException(predicate?: string, message?: string): antlr.FailedPredicateException {
         return new antlr.FailedPredicateException(this, predicate, message);
@@ -46,18 +46,18 @@ export class SimpleLangParser extends antlr.Parser {
 
     public constructor(input: antlr.TokenStream) {
         super(input);
-        this.interpreter = new antlr.ParserATNSimulator(this, SimpleLangParser._ATN, SimpleLangParser.decisionsToDFA, new antlr.PredictionContextCache());
+        this.interpreter = new antlr.ParserATNSimulator(this, RustParser._ATN, RustParser.decisionsToDFA, new antlr.PredictionContextCache());
     }
     public prog(): ProgContext {
         let localContext = new ProgContext(this.context, this.state);
-        this.enterRule(localContext, 0, SimpleLangParser.RULE_prog);
+        this.enterRule(localContext, 0, RustParser.RULE_prog);
         try {
             this.enterOuterAlt(localContext, 1);
             {
             this.state = 4;
             this.expression(0);
             this.state = 5;
-            this.match(SimpleLangParser.EOF);
+            this.match(RustParser.EOF);
             }
         }
         catch (re) {
@@ -86,7 +86,7 @@ export class SimpleLangParser extends antlr.Parser {
         let localContext = new ExpressionContext(this.context, parentState);
         let previousContext = localContext;
         let _startState = 2;
-        this.enterRecursionRule(localContext, 2, SimpleLangParser.RULE_expression, _p);
+        this.enterRecursionRule(localContext, 2, RustParser.RULE_expression, _p);
         let _la: number;
         try {
             let alternative: number;
@@ -95,20 +95,20 @@ export class SimpleLangParser extends antlr.Parser {
             this.state = 13;
             this.errorHandler.sync(this);
             switch (this.tokenStream.LA(1)) {
-            case SimpleLangParser.INT:
+            case RustParser.INT:
                 {
                 this.state = 8;
-                this.match(SimpleLangParser.INT);
+                this.match(RustParser.INT);
                 }
                 break;
-            case SimpleLangParser.T__4:
+            case RustParser.T__4:
                 {
                 this.state = 9;
-                this.match(SimpleLangParser.T__4);
+                this.match(RustParser.T__4);
                 this.state = 10;
                 this.expression(0);
                 this.state = 11;
-                this.match(SimpleLangParser.T__5);
+                this.match(RustParser.T__5);
                 }
                 break;
             default:
@@ -131,7 +131,7 @@ export class SimpleLangParser extends antlr.Parser {
                     case 1:
                         {
                         localContext = new ExpressionContext(parentContext, parentState);
-                        this.pushNewRecursionContext(localContext, _startState, SimpleLangParser.RULE_expression);
+                        this.pushNewRecursionContext(localContext, _startState, RustParser.RULE_expression);
                         this.state = 15;
                         if (!(this.precpred(this.context, 4))) {
                             throw this.createFailedPredicateException("this.precpred(this.context, 4)");
@@ -153,7 +153,7 @@ export class SimpleLangParser extends antlr.Parser {
                     case 2:
                         {
                         localContext = new ExpressionContext(parentContext, parentState);
-                        this.pushNewRecursionContext(localContext, _startState, SimpleLangParser.RULE_expression);
+                        this.pushNewRecursionContext(localContext, _startState, RustParser.RULE_expression);
                         this.state = 18;
                         if (!(this.precpred(this.context, 3))) {
                             throw this.createFailedPredicateException("this.precpred(this.context, 3)");
@@ -226,21 +226,21 @@ export class SimpleLangParser extends antlr.Parser {
 
     private static __ATN: antlr.ATN;
     public static get _ATN(): antlr.ATN {
-        if (!SimpleLangParser.__ATN) {
-            SimpleLangParser.__ATN = new antlr.ATNDeserializer().deserialize(SimpleLangParser._serializedATN);
+        if (!RustParser.__ATN) {
+            RustParser.__ATN = new antlr.ATNDeserializer().deserialize(RustParser._serializedATN);
         }
 
-        return SimpleLangParser.__ATN;
+        return RustParser.__ATN;
     }
 
 
-    private static readonly vocabulary = new antlr.Vocabulary(SimpleLangParser.literalNames, SimpleLangParser.symbolicNames, []);
+    private static readonly vocabulary = new antlr.Vocabulary(RustParser.literalNames, RustParser.symbolicNames, []);
 
     public override get vocabulary(): antlr.Vocabulary {
-        return SimpleLangParser.vocabulary;
+        return RustParser.vocabulary;
     }
 
-    private static readonly decisionsToDFA = SimpleLangParser._ATN.decisionToState.map( (ds: antlr.DecisionState, index: number) => new antlr.DFA(ds, index) );
+    private static readonly decisionsToDFA = RustParser._ATN.decisionToState.map( (ds: antlr.DecisionState, index: number) => new antlr.DFA(ds, index) );
 }
 
 export class ProgContext extends antlr.ParserRuleContext {
@@ -251,22 +251,22 @@ export class ProgContext extends antlr.ParserRuleContext {
         return this.getRuleContext(0, ExpressionContext)!;
     }
     public EOF(): antlr.TerminalNode {
-        return this.getToken(SimpleLangParser.EOF, 0)!;
+        return this.getToken(RustParser.EOF, 0)!;
     }
     public override get ruleIndex(): number {
-        return SimpleLangParser.RULE_prog;
+        return RustParser.RULE_prog;
     }
-    public override enterRule(listener: SimpleLangListener): void {
+    public override enterRule(listener: RustListener): void {
         if(listener.enterProg) {
              listener.enterProg(this);
         }
     }
-    public override exitRule(listener: SimpleLangListener): void {
+    public override exitRule(listener: RustListener): void {
         if(listener.exitProg) {
              listener.exitProg(this);
         }
     }
-    public override accept<Result>(visitor: SimpleLangVisitor<Result>): Result | null {
+    public override accept<Result>(visitor: RustVisitor<Result>): Result | null {
         if (visitor.visitProg) {
             return visitor.visitProg(this);
         } else {
@@ -282,7 +282,7 @@ export class ExpressionContext extends antlr.ParserRuleContext {
         super(parent, invokingState);
     }
     public INT(): antlr.TerminalNode | null {
-        return this.getToken(SimpleLangParser.INT, 0);
+        return this.getToken(RustParser.INT, 0);
     }
     public expression(): ExpressionContext[];
     public expression(i: number): ExpressionContext | null;
@@ -294,19 +294,19 @@ export class ExpressionContext extends antlr.ParserRuleContext {
         return this.getRuleContext(i, ExpressionContext);
     }
     public override get ruleIndex(): number {
-        return SimpleLangParser.RULE_expression;
+        return RustParser.RULE_expression;
     }
-    public override enterRule(listener: SimpleLangListener): void {
+    public override enterRule(listener: RustListener): void {
         if(listener.enterExpression) {
              listener.enterExpression(this);
         }
     }
-    public override exitRule(listener: SimpleLangListener): void {
+    public override exitRule(listener: RustListener): void {
         if(listener.exitExpression) {
              listener.exitExpression(this);
         }
     }
-    public override accept<Result>(visitor: SimpleLangVisitor<Result>): Result | null {
+    public override accept<Result>(visitor: RustVisitor<Result>): Result | null {
         if (visitor.visitExpression) {
             return visitor.visitExpression(this);
         } else {

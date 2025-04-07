@@ -1,12 +1,12 @@
 import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4ng';
-import { SimpleLangLexer } from './parser/src/SimpleLangLexer';
-import { ExpressionContext, ProgContext, SimpleLangParser } from './parser/src/SimpleLangParser';
-import { SimpleLangVisitor } from './parser/src/SimpleLangVisitor';
+import { RustLexer } from './parser/src/RustLexer';
+import { ExpressionContext, ProgContext, RustParser } from './parser/src/RustParser';
+import { RustVisitor } from './parser/src/RustVisitor';
 
 // TEST 2
-class SimpleLangEvaluatorVisitor extends AbstractParseTreeVisitor<number> implements SimpleLangVisitor<number> {
+class RustEvaluatorVisitor extends AbstractParseTreeVisitor<number> implements RustVisitor<number> {
     // Visit a parse tree produced by SimpleLangParser#prog
     visitProg(ctx: ProgContext): number {
         return this.visit(ctx.expression());
@@ -56,14 +56,14 @@ class SimpleLangEvaluatorVisitor extends AbstractParseTreeVisitor<number> implem
     }
 }
 
-export class SimpleLangEvaluator extends BasicEvaluator {
+export class RustEvaluator extends BasicEvaluator {
     private executionCount: number;
-    private visitor: SimpleLangEvaluatorVisitor;
+    private visitor: RustEvaluatorVisitor;
 
     constructor(conductor: IRunnerPlugin) {
         super(conductor);
         this.executionCount = 0;
-        this.visitor = new SimpleLangEvaluatorVisitor();
+        this.visitor = new RustEvaluatorVisitor();
     }
 
     async evaluateChunk(chunk: string): Promise<void> {
@@ -71,9 +71,9 @@ export class SimpleLangEvaluator extends BasicEvaluator {
         try {
             // Create the lexer and parser
             const inputStream = CharStream.fromString(chunk);
-            const lexer = new SimpleLangLexer(inputStream);
+            const lexer = new RustLexer(inputStream);
             const tokenStream = new CommonTokenStream(lexer);
-            const parser = new SimpleLangParser(tokenStream);
+            const parser = new RustParser(tokenStream);
 
             // Parse the input
             const tree = parser.prog();

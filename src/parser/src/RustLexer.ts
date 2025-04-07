@@ -1,10 +1,10 @@
-// Generated from src/SimpleLang.g4 by ANTLR 4.13.1
+// Generated from src/Rust.g4 by ANTLR 4.13.1
 
 import * as antlr from "antlr4ng";
 import { Token } from "antlr4ng";
 
 
-export class SimpleLangLexer extends antlr.Lexer {
+export class RustLexer extends antlr.Lexer {
     public static readonly T__0 = 1;
     public static readonly T__1 = 2;
     public static readonly T__2 = 3;
@@ -37,20 +37,20 @@ export class SimpleLangLexer extends antlr.Lexer {
 
     public constructor(input: antlr.CharStream) {
         super(input);
-        this.interpreter = new antlr.LexerATNSimulator(this, SimpleLangLexer._ATN, SimpleLangLexer.decisionsToDFA, new antlr.PredictionContextCache());
+        this.interpreter = new antlr.LexerATNSimulator(this, RustLexer._ATN, RustLexer.decisionsToDFA, new antlr.PredictionContextCache());
     }
 
-    public get grammarFileName(): string { return "SimpleLang.g4"; }
+    public get grammarFileName(): string { return "Rust.g4"; }
 
-    public get literalNames(): (string | null)[] { return SimpleLangLexer.literalNames; }
-    public get symbolicNames(): (string | null)[] { return SimpleLangLexer.symbolicNames; }
-    public get ruleNames(): string[] { return SimpleLangLexer.ruleNames; }
+    public get literalNames(): (string | null)[] { return RustLexer.literalNames; }
+    public get symbolicNames(): (string | null)[] { return RustLexer.symbolicNames; }
+    public get ruleNames(): string[] { return RustLexer.ruleNames; }
 
-    public get serializedATN(): number[] { return SimpleLangLexer._serializedATN; }
+    public get serializedATN(): number[] { return RustLexer._serializedATN; }
 
-    public get channelNames(): string[] { return SimpleLangLexer.channelNames; }
+    public get channelNames(): string[] { return RustLexer.channelNames; }
 
-    public get modeNames(): string[] { return SimpleLangLexer.modeNames; }
+    public get modeNames(): string[] { return RustLexer.modeNames; }
 
     public static readonly _serializedATN: number[] = [
         4,0,8,41,6,-1,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,
@@ -71,19 +71,19 @@ export class SimpleLangLexer extends antlr.Lexer {
 
     private static __ATN: antlr.ATN;
     public static get _ATN(): antlr.ATN {
-        if (!SimpleLangLexer.__ATN) {
-            SimpleLangLexer.__ATN = new antlr.ATNDeserializer().deserialize(SimpleLangLexer._serializedATN);
+        if (!RustLexer.__ATN) {
+            RustLexer.__ATN = new antlr.ATNDeserializer().deserialize(RustLexer._serializedATN);
         }
 
-        return SimpleLangLexer.__ATN;
+        return RustLexer.__ATN;
     }
 
 
-    private static readonly vocabulary = new antlr.Vocabulary(SimpleLangLexer.literalNames, SimpleLangLexer.symbolicNames, []);
+    private static readonly vocabulary = new antlr.Vocabulary(RustLexer.literalNames, RustLexer.symbolicNames, []);
 
     public override get vocabulary(): antlr.Vocabulary {
-        return SimpleLangLexer.vocabulary;
+        return RustLexer.vocabulary;
     }
 
-    private static readonly decisionsToDFA = SimpleLangLexer._ATN.decisionToState.map( (ds: antlr.DecisionState, index: number) => new antlr.DFA(ds, index) );
+    private static readonly decisionsToDFA = RustLexer._ATN.decisionToState.map( (ds: antlr.DecisionState, index: number) => new antlr.DFA(ds, index) );
 }
