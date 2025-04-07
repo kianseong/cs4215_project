@@ -1,34 +1,34 @@
-// Generated from src/SimpleLang.g4 by ANTLR 4.13.1
+// Generated from src/Rust.g4 by ANTLR 4.13.1
 
 import { ErrorNode, ParseTreeListener, ParserRuleContext, TerminalNode } from "antlr4ng";
 
 
-import { ProgContext } from "./SimpleLangParser.js";
-import { ExpressionContext } from "./SimpleLangParser.js";
+import { ProgContext } from "./RustParser.js";
+import { ExpressionContext } from "./RustParser.js";
 
 
 /**
  * This interface defines a complete listener for a parse tree produced by
- * `SimpleLangParser`.
+ * `RustParser`.
  */
-export class SimpleLangListener implements ParseTreeListener {
+export class RustListener implements ParseTreeListener {
     /**
-     * Enter a parse tree produced by `SimpleLangParser.prog`.
+     * Enter a parse tree produced by `RustParser.prog`.
      * @param ctx the parse tree
      */
     enterProg?: (ctx: ProgContext) => void;
     /**
-     * Exit a parse tree produced by `SimpleLangParser.prog`.
+     * Exit a parse tree produced by `RustParser.prog`.
      * @param ctx the parse tree
      */
     exitProg?: (ctx: ProgContext) => void;
     /**
-     * Enter a parse tree produced by `SimpleLangParser.expression`.
+     * Enter a parse tree produced by `RustParser.expression`.
      * @param ctx the parse tree
      */
     enterExpression?: (ctx: ExpressionContext) => void;
     /**
-     * Exit a parse tree produced by `SimpleLangParser.expression`.
+     * Exit a parse tree produced by `RustParser.expression`.
      * @param ctx the parse tree
      */
     exitExpression?: (ctx: ExpressionContext) => void;
