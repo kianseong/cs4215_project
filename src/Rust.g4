@@ -1,15 +1,17 @@
 grammar Rust;
 
 // keywords
-KW_IF : if
-KW_ELSE : else
-KW_WHILE : while
-KW_BREAK : break
-KW_CONTINUE : continue
-KW_FN : fn
-KW_RETURN : return
-KW_LET : let
-KW_MUT : mut
+
+KW_IF : 'if';
+KW_ELSE : 'else';
+KW_WHILE : 'while';
+KW_BREAK : 'break';
+KW_CONTINUE : 'continue';
+KW_FN : 'fn';
+KW_RETURN : 'return';
+KW_LET : 'let';
+KW_MUT : 'mut';
+
 
 prog: stmt* EOF;
 
@@ -28,10 +30,10 @@ stmt
 expr
     : lit
     | IDENT
-    | unary_op_expr
-    | multiply_divide_expr
-    | add_subtract_expr
-    | binary_logical_op_expr
+    | op=('!'|'-') expr
+    | expr op=('==' | '!=' | '<' | '<=' | '>' | '>=') expr
+    | expr op=('*'|'/') expr
+    | expr op=('+'|'-') expr
     | fn_call_expr
     | '(' expr ')'
     ;
@@ -41,17 +43,6 @@ block:
 
 expr_stmt: expr';';
 
-// literals
-
-lit: INT | BOOL
-
-multiply_divide_expr: expr op=('*'|'/') expr
-
-add_subtract_expr: expr op=('+'|'-') expr
-
-binary_logical_op_expr: expr op=('==' | '!=' | '<' | '<=' | '>' | '>=') expr
-
-unary_op_expr: op=('!'|'-') expr
 
 // control structures
 
@@ -61,16 +52,17 @@ break_stmt: KW_BREAK;
 
 continue_stmt: KW_CONTINUE;
 
-if_stmt: KW_IF expr block else_stmt?
+if_stmt: KW_IF expr block else_stmt?;
 
-else_stmt: KW_ELSE (block | if_stmt)
+else_stmt: KW_ELSE (block | if_stmt);
 
 
 // variables
 
 declaration_stmt: KW_LET KW_MUT? IDENT ':' TYPE '=' expr';';
 
-assignment_stmt: IDENT '=' expr';'
+assignment_stmt: IDENT '=' expr ';';
+
 
 // functions
 
@@ -81,7 +73,7 @@ param_list:
     param (',' param)* ','?;
 
 return_type:
-    '->' TYPE
+    '->' TYPE;
 
 fn_decl_stmt:
     KW_FN IDENT '(' param_list? ')' return_type? block;
@@ -95,10 +87,12 @@ return_stmt: KW_RETURN expr? ';';
 
 // lits
 
+lit: INT | BOOL;
+
 INT: [0-9]+;
-BOOL: true | false;
+BOOL: 'true' | 'false';
 IDENT: [a-zA-Z_][a-zA-Z0-9_]* ;
-TYPE: 'bool' | 'int'
+TYPE: 'bool' | 'int';
 
 
 // ignored
