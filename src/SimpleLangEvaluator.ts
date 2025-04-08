@@ -59,11 +59,13 @@ class SimpleLangEvaluatorVisitor extends AbstractParseTreeVisitor<number> implem
 export class SimpleLangEvaluator extends BasicEvaluator {
     private executionCount: number;
     private visitor: SimpleLangEvaluatorVisitor;
+    private OS: number[];
 
     constructor(conductor: IRunnerPlugin) {
         super(conductor);
         this.executionCount = 0;
         this.visitor = new SimpleLangEvaluatorVisitor();
+        this.OS = [];
     }
 
     async evaluateChunk(chunk: string): Promise<void> {
