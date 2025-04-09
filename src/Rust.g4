@@ -13,7 +13,7 @@ KW_LET : 'let';
 KW_MUT : 'mut';
 
 
-prog: stmt* EOF;
+prog: stmt* expr? EOF;
 
 stmt
     : expr_stmt
