@@ -2,30 +2,30 @@ import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4ng';
 import { RustLexer } from './parser/src/RustLexer';
-import { ExpressionContext, ProgContext, RustParser } from './parser/src/RustParser';
+import { ExprContext, ProgContext, RustParser } from './parser/src/RustParser';
 import { RustVisitor } from './parser/src/RustVisitor';
 
 // TEST 2
 class RustEvaluatorVisitor extends AbstractParseTreeVisitor<number> implements RustVisitor<number> {
     // Visit a parse tree produced by SimpleLangParser#prog
     visitProg(ctx: ProgContext): number {
-        return this.visit(ctx.expression());
+        return this.visit(ctx.stmt()[0]);
     }
 
     // Visit a parse tree produced by SimpleLangParser#expression
-    visitExpression(ctx: ExpressionContext): number {
+    visitExpr(ctx: ExprContext): number {
         if (ctx.getChildCount() === 1) {
             // INT case
             return parseInt(ctx.getText());
         } else if (ctx.getChildCount() === 3) {
             if (ctx.getChild(0).getText() === '(' && ctx.getChild(2).getText() === ')') {
                 // Parenthesized expression
-                return this.visit(ctx.getChild(1) as ExpressionContext);
+                return this.visit(ctx.getChild(1) as ExprContext);
             } else {
                 // Binary operation
-                const left = this.visit(ctx.getChild(0) as ExpressionContext);
+                const left = this.visit(ctx.getChild(0) as ExprContext);
                 const op = ctx.getChild(1).getText();
-                const right = this.visit(ctx.getChild(2) as ExpressionContext);
+                const right = this.visit(ctx.getChild(2) as ExprContext);
 
                 switch (op) {
                     case '+': return left + right;
