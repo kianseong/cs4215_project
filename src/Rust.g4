@@ -54,7 +54,7 @@ continue_stmt: KW_CONTINUE;
 
 if_stmt: KW_IF expr block else_stmt?;
 
-else_stmt: KW_ELSE (block | if_stmt);
+else_stmt: KW_ELSE block;
 
 
 // variables
