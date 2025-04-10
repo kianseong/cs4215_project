@@ -16,26 +16,26 @@ KW_MUT : 'mut';
 prog: stmt* expr? EOF;
 
 stmt
-    : expr_stmt
+    : block
+    | fn_decl_stmt
     | while_stmt
+    | if_stmt
+    | declaration_stmt
+    | return_stmt
+    | expr_stmt
     | break_stmt
     | continue_stmt
-    | if_stmt
-    | fn_decl_stmt
-    | return_stmt
-    | declaration_stmt
-    | block
     ;
 
 expr
-    : lit
-    | IDENT
+    : fn_call_expr
+    | '(' expr ')'
     | op=('!'|'-') expr
-    | expr op=('==' | '!=' | '<' | '<=' | '>' | '>=') expr
     | expr op=('*'|'/') expr
     | expr op=('+'|'-') expr
-    | fn_call_expr
-    | '(' expr ')'
+    | expr op=('==' | '!=' | '<' | '<=' | '>' | '>=') expr
+    | IDENT
+    | lit
     ;
 
 block:
