@@ -10,7 +10,7 @@ export class RustCompiler {
         this.instrs = []
     }
 
-    scan_for_locals(comp) {
+    scan_for_locals(comp: any): string[] {
         return comp.tag === 'block'
         ? comp.stmts.reduce((acc, x) => 
                             acc.concat(this.scan_for_locals(x)),
@@ -20,7 +20,7 @@ export class RustCompiler {
         : []
     }
     
-    compile_sequence(seq, ce) {
+    compile_sequence(seq: any, ce: string[][]) {
         if (seq.length === 0) 
             return this.instrs[this.wc++] = {tag: "LDC", val: undefined}
         let first = true
@@ -31,7 +31,7 @@ export class RustCompiler {
         }
     }
         
-    private compile_comp = {
+    private compile_comp: { [key: string]: any } = {
     lit:
         (comp, ce) => {
             this.instrs[this.wc++] = { tag: "LDC", 
@@ -165,14 +165,14 @@ export class RustCompiler {
     
     // compile component into instruction array instrs, 
     // starting at wc (write counter)
-    compile(comp, ce) {
+    compile(comp: any, ce: string[][]): any[] {
         this.compile_comp[comp.tag](comp, ce)
         return this.instrs
     }
     
     // compile program into instruction array instrs, 
     // after initializing wc and instrs
-    compile_program = program => {
+    compile_program(program: any): any[] {
         this.wc = 0
         this.instrs = []    
         this.compile(program, RustCompileTimeEnvironment.get_global_compile_environment())
