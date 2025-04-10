@@ -1,4 +1,6 @@
-export class Heap {
+import {HeapInterface} from "./HeapInterface"
+
+export class Heap implements HeapInterface {
     private static WORD_SIZE: number = 2 ** 3; // Word size in bytes (8 bytes)
     private static HEAP_SIZE: number = 2 ** 16; // Total heap size in bytes (64 KB)
     private static METADATA_SIZE: number = 1; // Metadata size in words (8 bytes)
@@ -23,5 +25,9 @@ export class Heap {
     // Helper function to convert word addresses to byte offsets
     private static addressToBytes(address: number): number {
         return address * Heap.WORD_SIZE;
+    }
+
+    is_Null(address: number): boolean {
+        return false
     }
 }
