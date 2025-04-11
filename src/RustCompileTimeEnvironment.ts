@@ -39,7 +39,7 @@ export class RustCompileTimeEnvironment {
     }
     
 
-    private static readonly constants: { [key: string]: any } = {
+    static readonly constants: { [key: string]: any } = {
         undefined     : undefined,
         math_E        : Math.E,
         math_LN10     : Math.LN10,
