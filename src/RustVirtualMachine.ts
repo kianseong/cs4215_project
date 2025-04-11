@@ -1,5 +1,5 @@
 import { HeapInterface } from './memory/HeapInterface';
-import { RustCompileTimeEnvironment } from "./RustCompileTimeEnvironment"
+import { RustCompileTimeEnvironment } from "./RustCompileTimeEnvironment";
 
 export class RustVirtualMachine {
 
@@ -11,6 +11,47 @@ export class RustVirtualMachine {
     private PC: number   // JS number
     private E: number    // heap Address
     private RTS: number[]  // JS array (stack) of Addresses
+    private heap_size: number
+    private node_size: number
+
+    RustVirtualMachine(heapsize_words: number, node_size: number) {
+        this.heap_size = heapsize_words
+        this.node_size = node_size
+    }
+
+    // set up registers, including free list
+    initialize_machine() {
+        this.OS = []
+        this.PC = 0
+        this.RTS = []
+        this.heap = this.heap.initialise_empty_heap()
+        this.PC = 0
+        this.heap.allocate_literal_values()
+        const builtins_frame = this.allocate_builtin_frame()
+        const constants_frame = this.allocate_constant_frame()
+        this.E = this.heap.heap_allocate_Environment(0)
+        this.E = this.heap.heap_Environment_extend(builtins_frame, this.E)
+        this.E = this.heap.heap_Environment_extend(constants_frame, this.E)
+    }
+
+    run(instrs: any[]) {
+        //print_code()
+        this.initialize_machine()
+        while (! (instrs[this.PC].tag === 'DONE')) {
+            //heap_display()
+            //display(PC, "PC: ")
+            //display(instrs[PC].tag, "instr: ")
+            //print_OS("\noperands:            ");
+            //print_RTS("\nRTS:            ");
+            const instr = instrs[this.PC++]
+            //display(instrs[PC].tag, "next instruction: ")
+            this.microcode[instr.tag](instr)
+            //heap_display()
+        }
+        //display(OS, "\nfinal operands:           ")
+        //print_OS()
+        return this.heap.address_to_JS_value(this.OS[0])
+    } 
 
     private static readonly binop_microcode: { [key: string]: any } = {
         '+':   (x, y)   => x + y,
