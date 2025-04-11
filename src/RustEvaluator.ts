@@ -7,14 +7,12 @@ import {RustJsonVisitor} from './RustJsonVisitor';
 
 export class RustEvaluator extends BasicEvaluator {
     private executionCount: number;
-    private visitor: SimpleLangEvaluatorVisitor;
-    private OS: number[];
+    private visitor: RustJsonVisitor;
 
     constructor(conductor: IRunnerPlugin) {
         super(conductor);
         this.executionCount = 0;
-        this.visitor = new SimpleLangEvaluatorVisitor();
-        this.OS = [];
+        this.visitor = new RustJsonVisitor();
     }
 
     async evaluateChunk(chunk: string): Promise<void> {
