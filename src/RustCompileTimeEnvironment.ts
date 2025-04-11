@@ -1,6 +1,10 @@
 import { HeapInterface } from './memory/HeapInterface';
 
 export class RustCompileTimeEnvironment {
+
+    static builtins: { [key: string]: any }
+    static builtin_array: any[]
+    static global_compile_environment: string[][]
     
     // in this machine, the builtins take their
     // arguments directly from the operand stack,
@@ -66,23 +70,21 @@ export class RustCompileTimeEnvironment {
       return -1;
     }
 
-    static get_global_compile_environment(): string[][] {
-        let builtins: { [key: string]: any } = {}
-        let builtin_array: any[] = []
+    static {
+        RustCompileTimeEnvironment.builtins = {}
+        RustCompileTimeEnvironment.builtin_array = []
         let i: number = 0
         for (const key in RustCompileTimeEnvironment.builtin_implementation) {
-            builtins[key] = 
+            RustCompileTimeEnvironment.builtins[key] = 
                 { tag:   'BUILTIN', 
                     id:    i,
                     arity: 0
                 }
-            builtin_array[i++] = RustCompileTimeEnvironment.builtin_implementation[key]
+            RustCompileTimeEnvironment.builtin_array[i++] = RustCompileTimeEnvironment.builtin_implementation[key]
         }
-        // compile-time frames only need synbols (keys), no values
-        let builtin_compile_frame: string[] = Object.keys(builtins)
+        let builtin_compile_frame: string[] = Object.keys(RustCompileTimeEnvironment.builtins)
         let constant_compile_frame: string[] = Object.keys(RustCompileTimeEnvironment.constants)
-        let global_compile_environment: string[][] = [builtin_compile_frame, constant_compile_frame]
-        return global_compile_environment
+        RustCompileTimeEnvironment.global_compile_environment = [builtin_compile_frame, constant_compile_frame]
     }
     
 }
