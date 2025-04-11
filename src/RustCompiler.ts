@@ -20,14 +20,17 @@ export class RustCompiler {
         : []
     }
     
-    compile_sequence(seq: any, ce: string[][]) {
-        if (seq.length === 0) 
+    compile_sequence(seq: any, value_producing: boolean, ce: string[][]) {
+        if (seq.length === 0)
             return this.instrs[this.wc++] = {tag: "LDC", val: undefined}
         let first = true
         for (let comp of seq) {
             first ? first = false
                   : this.instrs[this.wc++] = {tag: 'POP'}
             this.compile(comp, ce)
+        }
+        if (!value_producing) {
+            this.instrs[this.wc++] = {tag: 'POP'}
         }
     }
         
@@ -102,7 +105,7 @@ export class RustCompiler {
     lam:
         (comp, ce) => {
             this.instrs[this.wc++] = {tag: 'LDF', 
-                            arity: comp.arity, 
+                            arity: comp.prms.length, 
                             addr: this.wc + 1};
             // jump over the body of the lambda expression
             const goto_instruction = {tag: 'GOTO', addr: undefined}
@@ -115,29 +118,22 @@ export class RustCompiler {
             this.instrs[this.wc++] = {tag: 'RESET'}
             goto_instruction.addr = this.wc;
         },
-    seq: 
-        (comp, ce) => this.compile_sequence(comp.stmts, ce),
     blk:
         (comp, ce) => {
             const locals = this.scan_for_locals(comp.body)
             this.instrs[this.wc++] = {tag: 'ENTER_SCOPE', num: locals.length}
-            this.compile(comp.body,
-                    // extend compile-time environment
-                    RustCompileTimeEnvironment.compile_time_environment_extend(
-                        locals, ce))     
+            // extend compile-time environment
+            let new_env: string[][] = RustCompileTimeEnvironment.compile_time_environment_extend(
+                locals, ce)
+            this.compile_sequence(comp.body,
+                    comp.valueProducing,
+                    new_env)     
             this.instrs[this.wc++] = {tag: 'EXIT_SCOPE'}
         },
     let: 
         (comp, ce) => {
             this.compile(comp.expr, ce)
-            this.instrs[this.wc++] = {tag: 'ASSIGN', 
-                            pos: RustCompileTimeEnvironment.compile_time_environment_position(
-                                     ce, comp.sym)}
-        },
-    const:
-        (comp, ce) => {
-            this.compile(comp.expr, ce)
-            this.instrs[this.wc++] = {tag: 'ASSIGN', 
+            this.instrs[this.wc++] = {tag: 'LET', 
                             pos: RustCompileTimeEnvironment.compile_time_environment_position(
                                      ce, comp.sym)}
         },
@@ -154,11 +150,14 @@ export class RustCompiler {
     fun:
         (comp, ce) => {
             this.compile(
-                {tag:  'const',
+                {tag:  'let',
                  sym:  comp.sym,
+                 type: "function",
+                 mut: false,
                  expr: {tag: 'lam', 
                         prms: comp.prms, 
-                        body: comp.body}},
+                        body: comp.body,
+                        retType: comp.retType}},
                 ce)
         }
     }
