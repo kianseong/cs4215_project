@@ -22,6 +22,8 @@ export interface HeapInterface {
 
     heap_allocate_Callframe?(env: number, PC: number): number
 
+    heap_allocate_Environment?(number_of_frames: number): number
+
     address_to_JS_value?(address: number): any
     
     JS_value_to_address?(value: any): number
@@ -55,4 +57,23 @@ export interface HeapInterface {
     is_Builtin?(address: number): boolean
 
     is_Callframe?(address: number): boolean
+
+    /**
+     * Please help to initialise free!
+     * sth liddis in initialise machine
+     * heap_make(this.heap_size)
+        // initialize free list:
+        // every free node carries the address
+        // of the next free node as its first word
+        let i = 0
+        for (i = 0; i <= this.heap_size - this.node_size; i = i + this.node_size) {
+            heap_set(i, i + this.node_size)
+        }
+        // the empty free list is represented by -1
+        heap_set(i - this.node_size, -1)
+        free = 0
+     */
+    initialise_empty_heap?(): HeapInterface
+
+    allocate_literal_values?()
 }
