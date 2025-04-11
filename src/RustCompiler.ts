@@ -174,7 +174,7 @@ export class RustCompiler {
     compile_program(program: any): any[] {
         this.wc = 0
         this.instrs = []    
-        this.compile(program, RustCompileTimeEnvironment.get_global_compile_environment())
+        this.compile(program, RustCompileTimeEnvironment.global_compile_environment)
         this.instrs[this.wc] = {tag: 'DONE'}
         return this.instrs
     }
