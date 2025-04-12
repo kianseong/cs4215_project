@@ -86,7 +86,7 @@ export class RustVirtualMachine {
     
     private apply_builtin(builtin_id: number) {
         console.log(builtin_id, "apply_builtin: builtin_id:")
-        const result: any = RustCompileTimeEnvironment.builtin_array[builtin_id]()
+        const result: any = RustCompileTimeEnvironment.builtin_array[builtin_id](this.OS, this.heap)
         this.OS.pop() // pop fun
         this.OS.push(result)
     }
