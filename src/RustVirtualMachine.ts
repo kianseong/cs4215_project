@@ -14,7 +14,7 @@ export class RustVirtualMachine {
     private heap_size: number
     private node_size: number
 
-    RustVirtualMachine(heapsize_words: number, node_size: number) {
+    constructor(heapsize_words: number, node_size: number) {
         this.heap_size = heapsize_words
         this.node_size = node_size
     }
@@ -166,6 +166,9 @@ export class RustVirtualMachine {
             this.OS.push(val)
         },
     ASSIGN: 
+        instr =>
+            this.heap.heap_set_Environment_value(this.E, instr.pos, this.OS[0]),
+    LET: 
         instr =>
             this.heap.heap_set_Environment_value(this.E, instr.pos, this.OS[0]),
     LDF: 

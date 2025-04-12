@@ -5,7 +5,7 @@ export class RustCompiler {
     private wc: number
     private instrs: any[]
 
-    RustCompiler() {
+    constructor() {
         this.wc = 0
         this.instrs = []
     }
