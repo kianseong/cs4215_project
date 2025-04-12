@@ -14,7 +14,7 @@ export class RustVirtualMachine {
     private heap_size: number
     private node_size: number
 
-    RustVirtualMachine(heapsize_words: number, node_size: number) {
+    constructor(heapsize_words: number, node_size: number) {
         this.heap_size = heapsize_words
         this.node_size = node_size
     }

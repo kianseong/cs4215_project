@@ -4,15 +4,22 @@ import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4n
 import { RustLexer } from './parser/src/RustLexer';
 import { ExprContext, ProgContext, RustParser } from './parser/src/RustParser';
 import {RustJsonVisitor} from './RustJsonVisitor';
+import { RustCompiler } from "./RustCompiler";
+import { RustVirtualMachine } from "./RustVirtualMachine";
 
 export class RustEvaluator extends BasicEvaluator {
     private executionCount: number;
     private visitor: RustJsonVisitor;
+    private compiler: RustCompiler;
+    private machine: RustVirtualMachine;
+
 
     constructor(conductor: IRunnerPlugin) {
         super(conductor);
         this.executionCount = 0;
         this.visitor = new RustJsonVisitor();
+        this.compiler = new RustCompiler();
+        this.machine = new RustVirtualMachine(100, 10);
     }
 
     async evaluateChunk(chunk: string): Promise<void> {
@@ -28,7 +35,14 @@ export class RustEvaluator extends BasicEvaluator {
             const tree = parser.prog();
 
             // Evaluate the parsed tree
-            const result = this.visitor.visit(tree);
+            const jsonProgram = this.visitor.visit(tree);
+
+            // Compile json program
+            const compiledProgram = this.compiler.compile_program(jsonProgram)
+
+            // run VM and get result
+            this.machine.initialize_machine()
+            const result = this.machine.run(compiledProgram)
 
             // Send the result to the REPL
             this.conductor.sendOutput(`Result of expression: ${result}`);
