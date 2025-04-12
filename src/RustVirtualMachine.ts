@@ -168,6 +168,9 @@ export class RustVirtualMachine {
     ASSIGN: 
         instr =>
             this.heap.heap_set_Environment_value(this.E, instr.pos, this.OS[0]),
+    LET: 
+        instr =>
+            this.heap.heap_set_Environment_value(this.E, instr.pos, this.OS[0]),
     LDF: 
         instr => {
             const closure_address = 
