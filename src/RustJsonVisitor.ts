@@ -200,16 +200,16 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
         const bool_lit = ctx.BOOL()
         if (int_lit !== null) {
             return {
-                tag: "lit_int",
+                tag: "lit",
                 val: parseInt(int_lit.getText())
             }
         }
         if (bool_lit !== null) {
             return {
-                tag: "lit_bool",
+                tag: "lit",
                 val: int_lit.getText() === "true"
             }
-        } 
+        }
     }
 
     // Override the default result method from AbstractParseTreeVisitor
