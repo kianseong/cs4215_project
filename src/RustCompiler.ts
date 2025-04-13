@@ -12,14 +12,14 @@ export class RustCompiler {
 
     scan_for_locals(comp: any): string[] {
         return comp.tag === 'block'
-        ? comp.stmts.reduce((acc, x) => 
+        ? comp.stmts.reduce((acc, x) =>
                             acc.concat(this.scan_for_locals(x)),
                             [])
         : ['let', 'fun'].includes(comp.tag)
         ? [comp.sym]
         : []
     }
-    
+
     compile_sequence(seq: any, value_producing: boolean, ce: string[][]) {
         if (seq.length === 0)
             return this.instrs[this.wc++] = {tag: "LDC", val: undefined}
@@ -33,18 +33,18 @@ export class RustCompiler {
             this.instrs[this.wc++] = {tag: 'POP'}
         }
     }
-        
+
     private compile_comp: { [key: string]: any } = {
     lit:
         (comp, ce) => {
-            this.instrs[this.wc++] = { tag: "LDC", 
+            this.instrs[this.wc++] = { tag: "LDC",
                              val: comp.val
             }
         },
     nam:
         // store precomputed position information in LD instruction
         (comp, ce) => {
-            this.instrs[this.wc++] = { tag: "LD", 
+            this.instrs[this.wc++] = { tag: "LD",
                              sym: comp.sym,
                              pos: RustCompileTimeEnvironment.compile_time_environment_position(
                                       ce, comp.sym)
@@ -61,7 +61,7 @@ export class RustCompiler {
             this.compile(comp.scnd, ce)
             this.instrs[this.wc++] = {tag: 'BINOP', sym: comp.sym}
         },
-    cond: 
+    cond:
         (comp, ce) => {
             this.compile(comp.pred, ce)
             const jump_on_false_instruction = {tag: 'JOF', addr: undefined}
@@ -85,7 +85,7 @@ export class RustCompiler {
             this.instrs[this.wc++] = {tag: 'GOTO', addr: loop_start}
             jump_on_false_instruction.addr = this.wc
             this.instrs[this.wc++] = {tag: 'LDC', val: undefined}
-        }, 
+        },
     app:
         (comp, ce) => {
             this.compile(comp.fun, ce)
@@ -98,14 +98,14 @@ export class RustCompiler {
         // store precomputed position info in ASSIGN instruction
         (comp, ce) => {
             this.compile(comp.expr, ce)
-            this.instrs[this.wc++] = {tag: 'ASSIGN', 
+            this.instrs[this.wc++] = {tag: 'ASSIGN',
                             pos: RustCompileTimeEnvironment.compile_time_environment_position(
                                      ce, comp.sym)}
         },
     lam:
         (comp, ce) => {
-            this.instrs[this.wc++] = {tag: 'LDF', 
-                            arity: comp.prms.length, 
+            this.instrs[this.wc++] = {tag: 'LDF',
+                            arity: comp.prms.length,
                             addr: this.wc + 1};
             // jump over the body of the lambda expression
             const goto_instruction = {tag: 'GOTO', addr: undefined}
@@ -118,7 +118,7 @@ export class RustCompiler {
             this.instrs[this.wc++] = {tag: 'RESET'}
             goto_instruction.addr = this.wc;
         },
-    blk:
+    block:
         (comp, ce) => {
             const locals = this.scan_for_locals(comp.body)
             this.instrs[this.wc++] = {tag: 'ENTER_SCOPE', num: locals.length}
@@ -127,13 +127,13 @@ export class RustCompiler {
                 locals, ce)
             this.compile_sequence(comp.body,
                     comp.valueProducing,
-                    new_env)     
+                    new_env)
             this.instrs[this.wc++] = {tag: 'EXIT_SCOPE'}
         },
-    let: 
+    let:
         (comp, ce) => {
             this.compile(comp.expr, ce)
-            this.instrs[this.wc++] = {tag: 'LET', 
+            this.instrs[this.wc++] = {tag: 'LET',
                             pos: RustCompileTimeEnvironment.compile_time_environment_position(
                                      ce, comp.sym)}
         },
@@ -154,26 +154,26 @@ export class RustCompiler {
                  sym:  comp.sym,
                  type: "function",
                  mut: false,
-                 expr: {tag: 'lam', 
-                        prms: comp.prms, 
+                 expr: {tag: 'lam',
+                        prms: comp.prms,
                         body: comp.body,
                         retType: comp.retType}},
                 ce)
         }
     }
-    
-    // compile component into instruction array instrs, 
+
+    // compile component into instruction array instrs,
     // starting at wc (write counter)
     compile(comp: any, ce: string[][]): any[] {
         this.compile_comp[comp.tag](comp, ce)
         return this.instrs
     }
-    
-    // compile program into instruction array instrs, 
+
+    // compile program into instruction array instrs,
     // after initializing wc and instrs
     compile_program(program: any): any[] {
         this.wc = 0
-        this.instrs = []    
+        this.instrs = []
         this.compile(program, RustCompileTimeEnvironment.global_compile_environment)
         this.instrs[this.wc] = {tag: 'DONE'}
         return this.instrs
