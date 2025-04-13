@@ -55,7 +55,7 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
                 const op = ctx.getChild(1).getText();
                 const right = this.visit(ctx.getChild(2) as ExprContext);
                 return {
-                    tag: "binary_operator_combination",
+                    tag: "binop",
                     sym: op,
                     frst: left,
                     scnd: right
