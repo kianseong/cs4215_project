@@ -51,7 +51,7 @@ export class RustVirtualMachine {
         //display(OS, "\nfinal operands:           ")
         //print_OS()
         return this.heap.address_to_JS_value(this.OS[0])
-    } 
+    }
 
     private static readonly binop_microcode: { [key: string]: any } = {
         '+':   (x, y)   => x + y,
@@ -66,48 +66,48 @@ export class RustVirtualMachine {
         '===': (x, y) => x === y,
         '!==': (x, y) => x !== y
     }
-    
+
     // v2 is popped before v1
     private apply_binop(op: string, v2: number, v1: number): number {
         return this.heap.JS_value_to_address(RustVirtualMachine.binop_microcode[op]
             (this.heap.address_to_JS_value(v1),
             this.heap.address_to_JS_value(v2)))
     }
-         
+
     private static readonly unop_microcode: { [key: string]: any } = {
         '-unary': x => - x,
         '!'     : x => ! x
     }
-    
+
     private apply_unop(op: string, v: number): number {
         return this.heap.JS_value_to_address(RustVirtualMachine.unop_microcode[op]
             (this.heap.address_to_JS_value(v)))
     }
-    
+
     private apply_builtin(builtin_id: number) {
         console.log(builtin_id, "apply_builtin: builtin_id:")
         const result: any = RustCompileTimeEnvironment.builtin_array[builtin_id](this.OS, this.heap)
         this.OS.pop() // pop fun
         this.OS.push(result)
     }
-    
+
     private allocate_builtin_frame(): number {
         const builtin_values: any[] = Object.values(RustCompileTimeEnvironment.builtins)
-        const frame_address: number = 
+        const frame_address: number =
             this.heap.heap_allocate_Frame(builtin_values.length)
         for (let i = 0; i < builtin_values.length; i++) {
             const builtin = builtin_values[i];
             this.heap.heap_set_child(
-                frame_address, 
+                frame_address,
                 i,
                 this.heap.heap_allocate_Builtin(builtin.id))
         }
         return frame_address
-    }    
-    
+    }
+
     private allocate_constant_frame(): number {
         const constant_values = Object.values(RustCompileTimeEnvironment.constants)
-        const frame_address = 
+        const frame_address =
                 this.heap.heap_allocate_Frame(constant_values.length)
         for (let i = 0; i < constant_values.length; i++) {
             const constant_value = constant_values[i];
@@ -115,21 +115,21 @@ export class RustVirtualMachine {
                 this.heap.heap_set_child(frame_address, i, this.heap.Undefined)
             } else {
                 this.heap.heap_set_child(
-                    frame_address, 
+                    frame_address,
                     i,
                     this.heap.heap_allocate_Number(constant_value))
             }
         }
         return frame_address
-    }    
-    
+    }
+
     // *******
     // machine
     // *******
-    
+
     private microcode: { [key: string]: any } = {
     LDC:
-        instr => 
+        instr =>
         this.OS.push(this.heap.JS_value_to_address(instr.val)),
     UNOP:
         instr =>
@@ -137,16 +137,16 @@ export class RustVirtualMachine {
     BINOP:
         instr =>
             this.OS.push(this.apply_binop(instr.sym, this.OS.pop(), this.OS.pop())),
-    POP: 
+    POP:
         instr =>
             this.OS.pop(),
-    JOF: 
-        instr => 
+    JOF:
+        instr =>
             this.PC = this.heap.is_True(this.OS.pop()) ? this.PC : instr.addr,
     GOTO:
-        instr => 
+        instr =>
             this.PC = instr.addr,
-    ENTER_SCOPE: 
+    ENTER_SCOPE:
         instr => {
             this.RTS.push(this.heap.heap_allocate_Blockframe(this.E))
             const frame_address = this.heap.heap_allocate_Frame(instr.num)
@@ -156,29 +156,29 @@ export class RustVirtualMachine {
             }
         },
     EXIT_SCOPE:
-        instr => 
+        instr =>
             this.E = this.heap.heap_get_Blockframe_environment(this.RTS.pop()),
-    LD: 
+    LD:
         instr => {
             const val = this.heap.heap_get_Environment_value(this.E, instr.pos)
-            if (this.heap.is_Unassigned(val)) 
+            if (this.heap.is_Unassigned(val))
                 throw new Error("access of unassigned variable")
             this.OS.push(val)
         },
-    ASSIGN: 
+    ASSIGN:
         instr =>
             this.heap.heap_set_Environment_value(this.E, instr.pos, this.OS[0]),
-    LET: 
+    LET:
         instr =>
             this.heap.heap_set_Environment_value(this.E, instr.pos, this.OS[0]),
-    LDF: 
+    LDF:
         instr => {
-            const closure_address = 
+            const closure_address =
                 this.heap.heap_allocate_Closure(
                           instr.arity, instr.addr, this.E)
             this.OS.push(closure_address)
         },
-    CALL: 
+    CALL:
         instr => {
             const arity = instr.arity
             const fun = this.OS[arity]
@@ -193,11 +193,11 @@ export class RustVirtualMachine {
             this.OS.pop() // pop fun
             this.RTS.push(this.heap.heap_allocate_Callframe(this.E, this.PC))
             this.E = this.heap.heap_Environment_extend(
-                    new_frame, 
+                    new_frame,
                     this.heap.heap_get_Closure_environment(fun))
             this.PC = new_PC
         },
-    TAIL_CALL: 
+    TAIL_CALL:
         instr => {
             const arity = instr.arity
             const fun = this.OS[arity]
@@ -216,7 +216,7 @@ export class RustVirtualMachine {
                     this.heap.heap_get_Closure_environment(fun))
             this.PC = new_PC
         },
-    RESET: 
+    RESET:
         instr => {
             // keep popping...
             const top_frame = this.RTS.pop()
@@ -226,8 +226,8 @@ export class RustVirtualMachine {
                 this.E = this.heap.heap_get_Callframe_environment(top_frame)
             } else {
             this.PC--
-            }    
+            }
         }
     }
-    
+
 }

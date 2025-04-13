@@ -39,6 +39,7 @@ export class RustEvaluator extends BasicEvaluator {
 
             // Compile json program
             const compiledProgram = this.compiler.compile_program(jsonProgram)
+            console.log(compiledProgram)
 
             // run VM and get result
             this.machine.initialize_machine()
