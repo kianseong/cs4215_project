@@ -35,7 +35,7 @@ export class RustCompiler {
     }
 
     private compile_comp: { [key: string]: any } = {
-    test: (comp, ce) => console.log('tst'),
+    test: (comp, ce) => console.log('test'),
     lit:
         (comp, ce) => {
             this.instrs[this.wc++] = { tag: "LDC",

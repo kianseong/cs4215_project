@@ -39,6 +39,7 @@ export class RustEvaluator extends BasicEvaluator {
             const tree = parser.prog();
 
             // Evaluate the parsed tree
+            this.sendOut('Ran to here');
             const jsonProgram = this.visitor.visit(tree);
             this.sendOut(JSON.stringify(jsonProgram))
 

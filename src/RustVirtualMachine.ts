@@ -25,7 +25,6 @@ export class RustVirtualMachine {
         this.PC = 0
         this.RTS = []
         this.heap = this.heap.initialise_empty_heap()
-        this.PC = 0
         this.heap.allocate_literal_values()
         const builtins_frame = this.allocate_builtin_frame()
         const constants_frame = this.allocate_constant_frame()
