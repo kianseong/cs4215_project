@@ -25,7 +25,7 @@ export class RustEvaluator extends BasicEvaluator {
     async evaluateChunk(chunk: string): Promise<void> {
         this.executionCount++;
         try {
-            console.log('test')
+            this.conductor.sendOutput('evaluateChunk from RustEvaluator')
             // Create the lexer and parser
             const inputStream = CharStream.fromString(chunk);
             const lexer = new RustLexer(inputStream);
@@ -40,6 +40,7 @@ export class RustEvaluator extends BasicEvaluator {
 
             // Compile json program
             const compiledProgram = this.compiler.compile_program(jsonProgram)
+            this.conductor.sendOutput(JSON.stringify(compiledProgram))
 
             // run VM and get result
             this.machine.initialize_machine()
