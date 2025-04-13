@@ -118,7 +118,7 @@ export class RustCompiler {
             this.instrs[this.wc++] = {tag: 'RESET'}
             goto_instruction.addr = this.wc;
         },
-    blk:
+    block:
         (comp, ce) => {
             const locals = this.scan_for_locals(comp.body)
             this.instrs[this.wc++] = {tag: 'ENTER_SCOPE', num: locals.length}
