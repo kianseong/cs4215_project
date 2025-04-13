@@ -42,7 +42,7 @@ block:
     '{' stmt* expr? '}';
 
 expr_stmt: expr';';
-
+empty_stmt: ';';
 
 // control structures
 
