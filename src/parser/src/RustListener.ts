@@ -8,6 +8,7 @@ import { StmtContext } from "./RustParser.js";
 import { ExprContext } from "./RustParser.js";
 import { BlockContext } from "./RustParser.js";
 import { Expr_stmtContext } from "./RustParser.js";
+import { Empty_stmtContext } from "./RustParser.js";
 import { While_stmtContext } from "./RustParser.js";
 import { Break_stmtContext } from "./RustParser.js";
 import { Continue_stmtContext } from "./RustParser.js";
@@ -80,6 +81,16 @@ export class RustListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitExpr_stmt?: (ctx: Expr_stmtContext) => void;
+    /**
+     * Enter a parse tree produced by `RustParser.empty_stmt`.
+     * @param ctx the parse tree
+     */
+    enterEmpty_stmt?: (ctx: Empty_stmtContext) => void;
+    /**
+     * Exit a parse tree produced by `RustParser.empty_stmt`.
+     * @param ctx the parse tree
+     */
+    exitEmpty_stmt?: (ctx: Empty_stmtContext) => void;
     /**
      * Enter a parse tree produced by `RustParser.while_stmt`.
      * @param ctx the parse tree

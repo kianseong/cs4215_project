@@ -1,5 +1,5 @@
 import { AbstractParseTreeVisitor } from 'antlr4ng';
-import { ParamContext, StmtContext, ExprContext, ProgContext, LitContext, Return_stmtContext, Argument_listContext, Fn_call_exprContext, Fn_decl_stmtContext, Return_typeContext, Param_listContext, Assignment_stmtContext, Declaration_stmtContext, Break_stmtContext, Continue_stmtContext, If_stmtContext, Else_stmtContext, While_stmtContext, Expr_stmtContext, BlockContext} from './parser/src/RustParser';
+import { ParamContext, StmtContext, ExprContext, ProgContext, LitContext, Return_stmtContext, Argument_listContext, Fn_call_exprContext, Fn_decl_stmtContext, Return_typeContext, Param_listContext, Assignment_stmtContext, Declaration_stmtContext, Break_stmtContext, Continue_stmtContext, If_stmtContext, Else_stmtContext, While_stmtContext, Expr_stmtContext, BlockContext, Empty_stmtContext} from './parser/src/RustParser';
 import { RustVisitor } from './parser/src/RustVisitor';
 
 export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements RustVisitor<any> {
@@ -19,6 +19,8 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
             valueProducing: valueProducing
         }
     }
+
+    visitEmpty_stmt(_: Empty_stmtContext): void { };
 
     visitStmt(ctx: StmtContext): any{
         return this.visit(ctx.getChild(0))
