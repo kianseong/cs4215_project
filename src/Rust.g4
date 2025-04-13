@@ -16,7 +16,8 @@ KW_MUT : 'mut';
 prog: stmt* expr? EOF;
 
 stmt
-    : block
+    : empty_stmt
+    | block
     | fn_decl_stmt
     | while_stmt
     | if_stmt
