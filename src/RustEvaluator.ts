@@ -13,6 +13,10 @@ export class RustEvaluator extends BasicEvaluator {
     private compiler: RustCompiler;
     private machine: RustVirtualMachine;
 
+    private sendOut(str: string) {
+        this.conductor.sendOutput(str);
+    }
+
 
     constructor(conductor: IRunnerPlugin) {
         super(conductor);
@@ -34,10 +38,11 @@ export class RustEvaluator extends BasicEvaluator {
             // Parse the input
             this.conductor.sendOutput('Ran to this point');
             const tree = parser.prog();
-            this.conductor.sendOutput(JSON.stringify(tree));
 
             // Evaluate the parsed tree
+            this.conductor.sendOutput('Ran to this point 2');
             const jsonProgram = this.visitor.visit(tree);
+            this.sendOut(JSON.stringify(jsonProgram))
 
             // Compile json program
             const compiledProgram = this.compiler.compile_program(jsonProgram)
