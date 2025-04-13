@@ -37,6 +37,7 @@ export class RustVirtualMachine {
     run(instrs: any[]) {
         //print_code()
         this.initialize_machine()
+        console.log('run from RustVirtualMachine')
         while (! (instrs[this.PC].tag === 'DONE')) {
             //heap_display()
             //display(PC, "PC: ")
