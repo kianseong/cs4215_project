@@ -36,11 +36,10 @@ export class RustEvaluator extends BasicEvaluator {
             const parser = new RustParser(tokenStream);
 
             // Parse the input
-            this.conductor.sendOutput('Ran to this point');
             const tree = parser.prog();
+            this.sendOut(tree.toStringTree())
 
             // Evaluate the parsed tree
-            this.conductor.sendOutput('Ran to this point 2');
             const jsonProgram = this.visitor.visit(tree);
             this.sendOut(JSON.stringify(jsonProgram))
 
