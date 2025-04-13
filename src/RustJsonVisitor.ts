@@ -22,9 +22,9 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
 
     visitEmpty_stmt(_: Empty_stmtContext): void { };
 
-    visitStmt(ctx: StmtContext): any{
-        return this.visit(ctx.getChild(0))
-    }
+    // visitStmt(ctx: StmtContext): any{
+    //     return this.visit(ctx.getChild(0))
+    // }
 
     visitExpr(ctx: ExprContext): any {
         if (ctx.lit() !== null) {
