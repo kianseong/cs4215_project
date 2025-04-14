@@ -10,14 +10,14 @@ export class RustCompiler {
         this.instrs = []
     }
 
-    scan_for_locals(comp: any): string[] {
-        return comp.tag === 'block'
-        ? comp.stmts.reduce((acc, x) =>
-                            acc.concat(this.scan_for_locals(x)),
-                            [])
-        : ['let', 'fun'].includes(comp.tag)
-        ? [comp.sym]
-        : []
+    scan_for_locals(comps: any[]): string[] {
+        let locals = []
+        for (let comp of comps) {
+            if (['let', 'fun'].includes(comp.tag)) {
+                locals.push(comp.sym)
+            }
+        }
+        return locals
     }
 
     compile_sequence(seq: any, value_producing: boolean, ce: string[][]) {
@@ -35,7 +35,6 @@ export class RustCompiler {
     }
 
     private compile_comp: { [key: string]: any } = {
-    test: (comp, ce) => console.log('test'),
     lit:
         (comp, ce) => {
             this.instrs[this.wc++] = { tag: "LDC",

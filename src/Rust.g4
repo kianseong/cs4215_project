@@ -92,9 +92,8 @@ lit: INT | BOOL;
 
 INT: [0-9]+;
 BOOL: 'true' | 'false';
-IDENT: [a-zA-Z_][a-zA-Z0-9_]* ;
 TYPE: 'bool' | 'number';
-
+IDENT: [a-zA-Z_][a-zA-Z0-9_]* ;
 
 // ignored
 WS: [ \t\r\n]+ -> skip;

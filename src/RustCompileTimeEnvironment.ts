@@ -53,12 +53,15 @@ export class RustCompileTimeEnvironment {
 
     static compile_time_environment_extend(vs: string[], e: string[][]): string[][] {
         //  make shallow copy of e
-        return [...e].concat(vs)
+        return [...e].concat([vs])
     }
 
     static compile_time_environment_position(env: string[][], x: string): number[] {
-        let frame_index: number = env.length
-        while (this.value_index(env[--frame_index], x) === -1) {}
+        let frame_index: number = env.length - 1
+        while (frame_index >= 0 && this.value_index(env[frame_index--], x) === -1) {}
+        if (frame_index < 0) {
+            throw new Error(`Variable ${x} has not been declared`);
+        }
         return [frame_index, 
                 this.value_index(env[frame_index], x)]
     }
