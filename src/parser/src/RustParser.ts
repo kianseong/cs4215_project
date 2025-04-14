@@ -163,52 +163,45 @@ export class RustParser extends antlr.Parser {
             this.state = 63;
             this.errorHandler.sync(this);
             switch (this.tokenStream.LA(1)) {
-            case RustParser.T__15:
+            case RustParser.T__13:
                 this.enterOuterAlt(localContext, 1);
                 {
                 this.state = 53;
-                this.empty_stmt();
-                }
-                break;
-            case RustParser.T__13:
-                this.enterOuterAlt(localContext, 2);
-                {
-                this.state = 54;
                 this.block();
                 }
                 break;
             case RustParser.KW_FN:
-                this.enterOuterAlt(localContext, 3);
+                this.enterOuterAlt(localContext, 2);
                 {
-                this.state = 55;
+                this.state = 54;
                 this.fn_decl_stmt();
                 }
                 break;
             case RustParser.KW_WHILE:
-                this.enterOuterAlt(localContext, 4);
+                this.enterOuterAlt(localContext, 3);
                 {
-                this.state = 56;
+                this.state = 55;
                 this.while_stmt();
                 }
                 break;
             case RustParser.KW_IF:
-                this.enterOuterAlt(localContext, 5);
+                this.enterOuterAlt(localContext, 4);
                 {
-                this.state = 57;
+                this.state = 56;
                 this.if_stmt();
                 }
                 break;
             case RustParser.KW_LET:
-                this.enterOuterAlt(localContext, 6);
+                this.enterOuterAlt(localContext, 5);
                 {
-                this.state = 58;
+                this.state = 57;
                 this.declaration_stmt();
                 }
                 break;
             case RustParser.KW_RETURN:
-                this.enterOuterAlt(localContext, 7);
+                this.enterOuterAlt(localContext, 6);
                 {
-                this.state = 59;
+                this.state = 58;
                 this.return_stmt();
                 }
                 break;
@@ -218,24 +211,31 @@ export class RustParser extends antlr.Parser {
             case RustParser.INT:
             case RustParser.BOOL:
             case RustParser.IDENT:
-                this.enterOuterAlt(localContext, 8);
+                this.enterOuterAlt(localContext, 7);
                 {
-                this.state = 60;
+                this.state = 59;
                 this.expr_stmt();
                 }
                 break;
             case RustParser.KW_BREAK:
-                this.enterOuterAlt(localContext, 9);
+                this.enterOuterAlt(localContext, 8);
                 {
-                this.state = 61;
+                this.state = 60;
                 this.break_stmt();
                 }
                 break;
             case RustParser.KW_CONTINUE:
+                this.enterOuterAlt(localContext, 9);
+                {
+                this.state = 61;
+                this.continue_stmt();
+                }
+                break;
+            case RustParser.T__15:
                 this.enterOuterAlt(localContext, 10);
                 {
                 this.state = 62;
-                this.continue_stmt();
+                this.empty_stmt();
                 }
                 break;
             default:
@@ -1076,12 +1076,12 @@ export class RustParser extends antlr.Parser {
         0,0,38,184,1,0,0,0,40,190,1,0,0,0,42,44,3,2,1,0,43,42,1,0,0,0,44,
         47,1,0,0,0,45,43,1,0,0,0,45,46,1,0,0,0,46,49,1,0,0,0,47,45,1,0,0,
         0,48,50,3,4,2,0,49,48,1,0,0,0,49,50,1,0,0,0,50,51,1,0,0,0,51,52,
-        5,0,0,1,52,1,1,0,0,0,53,64,3,10,5,0,54,64,3,6,3,0,55,64,3,32,16,
-        0,56,64,3,12,6,0,57,64,3,18,9,0,58,64,3,22,11,0,59,64,3,38,19,0,
-        60,64,3,8,4,0,61,64,3,14,7,0,62,64,3,16,8,0,63,53,1,0,0,0,63,54,
-        1,0,0,0,63,55,1,0,0,0,63,56,1,0,0,0,63,57,1,0,0,0,63,58,1,0,0,0,
-        63,59,1,0,0,0,63,60,1,0,0,0,63,61,1,0,0,0,63,62,1,0,0,0,64,3,1,0,
-        0,0,65,66,6,2,-1,0,66,76,3,34,17,0,67,68,5,1,0,0,68,69,3,4,2,0,69,
+        5,0,0,1,52,1,1,0,0,0,53,64,3,6,3,0,54,64,3,32,16,0,55,64,3,12,6,
+        0,56,64,3,18,9,0,57,64,3,22,11,0,58,64,3,38,19,0,59,64,3,8,4,0,60,
+        64,3,14,7,0,61,64,3,16,8,0,62,64,3,10,5,0,63,53,1,0,0,0,63,54,1,
+        0,0,0,63,55,1,0,0,0,63,56,1,0,0,0,63,57,1,0,0,0,63,58,1,0,0,0,63,
+        59,1,0,0,0,63,60,1,0,0,0,63,61,1,0,0,0,63,62,1,0,0,0,64,3,1,0,0,
+        0,65,66,6,2,-1,0,66,76,3,34,17,0,67,68,5,1,0,0,68,69,3,4,2,0,69,
         70,5,2,0,0,70,76,1,0,0,0,71,72,7,0,0,0,72,76,3,4,2,6,73,76,5,32,
         0,0,74,76,3,40,20,0,75,65,1,0,0,0,75,67,1,0,0,0,75,71,1,0,0,0,75,
         73,1,0,0,0,75,74,1,0,0,0,76,88,1,0,0,0,77,78,10,5,0,0,78,79,7,1,
@@ -1184,9 +1184,6 @@ export class StmtContext extends antlr.ParserRuleContext {
     public constructor(parent: antlr.ParserRuleContext | null, invokingState: number) {
         super(parent, invokingState);
     }
-    public empty_stmt(): Empty_stmtContext | null {
-        return this.getRuleContext(0, Empty_stmtContext);
-    }
     public block(): BlockContext | null {
         return this.getRuleContext(0, BlockContext);
     }
@@ -1213,6 +1210,9 @@ export class StmtContext extends antlr.ParserRuleContext {
     }
     public continue_stmt(): Continue_stmtContext | null {
         return this.getRuleContext(0, Continue_stmtContext);
+    }
+    public empty_stmt(): Empty_stmtContext | null {
+        return this.getRuleContext(0, Empty_stmtContext);
     }
     public override get ruleIndex(): number {
         return RustParser.RULE_stmt;

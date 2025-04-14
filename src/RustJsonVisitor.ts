@@ -15,12 +15,16 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
         }
         return {
             tag: "block",
-            stmts: jsonStatements,
+            body: jsonStatements,
             valueProducing: valueProducing
         }
     }
 
-    visitEmpty_stmt(_: Empty_stmtContext): void { };
+    visitEmpty_stmt(_: Empty_stmtContext): any { 
+        return {
+            tag: "empty"
+        }
+    };
 
     visitStmt(ctx: StmtContext): any{
         return this.visit(ctx.getChild(0))
@@ -80,7 +84,7 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
         }
         return {
             tag: "block",
-            stmts: jsonStatements,
+            body: jsonStatements,
             valueProducing: valueProducing
         }
     }

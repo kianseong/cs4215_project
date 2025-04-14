@@ -1,4 +1,5 @@
 import { HeapInterface } from './memory/HeapInterface';
+import { Heap } from './memory/heap';
 import { RustCompileTimeEnvironment } from "./RustCompileTimeEnvironment";
 
 export class RustVirtualMachine {
@@ -17,6 +18,7 @@ export class RustVirtualMachine {
     constructor(heapsize_words: number, node_size: number) {
         this.heap_size = heapsize_words
         this.node_size = node_size
+        this.heap = new Heap()
     }
 
     // set up registers, including free list
