@@ -23,7 +23,7 @@ export class RustEvaluator extends BasicEvaluator {
         this.executionCount = 0;
         this.visitor = new RustJsonVisitor();
         this.compiler = new RustCompiler();
-        this.machine = new RustVirtualMachine(100, 10);
+        this.machine = new RustVirtualMachine();
     }
 
     evaluate(chunk: string): void {
@@ -36,7 +36,6 @@ export class RustEvaluator extends BasicEvaluator {
         const tree = parser.prog();
 
         // Evaluate the parsed tree
-        console.log('Ran to here');
         const jsonProgram = this.visitor.visit(tree);
         console.log(JSON.stringify(jsonProgram))
 

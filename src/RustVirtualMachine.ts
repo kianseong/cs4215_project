@@ -12,12 +12,8 @@ export class RustVirtualMachine {
     private PC: number   // JS number
     private E: number    // heap Address
     private RTS: number[]  // JS array (stack) of Addresses
-    private heap_size: number
-    private node_size: number
 
-    constructor(heapsize_words: number, node_size: number) {
-        this.heap_size = heapsize_words
-        this.node_size = node_size
+    constructor() {
         this.heap = new Heap()
     }
 
@@ -65,8 +61,8 @@ export class RustVirtualMachine {
         '<=':  (x, y) => x <= y,
         '>=':  (x, y) => x >= y,
         '>':   (x, y) => x > y,
-        '===': (x, y) => x === y,
-        '!==': (x, y) => x !== y
+        '==': (x, y) => x === y,
+        '!=': (x, y) => x !== y
     }
 
     // v2 is popped before v1

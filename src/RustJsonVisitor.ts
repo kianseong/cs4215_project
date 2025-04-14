@@ -5,7 +5,7 @@ import { RustVisitor } from './parser/src/RustVisitor';
 export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements RustVisitor<any> {
 
     visitProg(ctx: ProgContext): any {
-        let jsonStatements: any[] = ctx.stmt().map(this.visit)
+        let jsonStatements: any[] = ctx.stmt().map(stmt => this.visit(stmt))
 
         let valueProducing = false
         const valueExpr: ExprContext = ctx.expr()
@@ -45,9 +45,9 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
         }
         if (ctx.getChildCount() === 2) {
             const op = ctx.getChild(0).getText();
-            const expression = this.visit(ctx.getChild(2) as ExprContext)
+            const expression = this.visit(ctx.getChild(1) as ExprContext)
             return {
-                tag: "unary_operator_combination",
+                tag: "unop",
                 sym: op,
                 frst: expression
             }
@@ -74,7 +74,7 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
 
 
     visitBlock(ctx: BlockContext): any{
-        let jsonStatements: any[] = ctx.stmt().map(this.visit)
+        let jsonStatements: any[] = ctx.stmt().map(stmt => this.visit(stmt))
 
         let valueProducing = false
         const valueExpr: ExprContext = ctx.expr()
@@ -114,11 +114,16 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
     }
 
     visitIf_stmt(ctx: If_stmtContext): any {
+        let elseBlock = ctx.else_stmt()
+        let elseJson = undefined
+        if (elseBlock !== null) {
+            elseJson = this.visit(elseBlock).alt
+        }
         return {
             tag: "cond",
             pred: this.visit(ctx.expr()),
             cons: this.visit(ctx.block()),
-            alt: this.visit(ctx.else_stmt())?.alt
+            alt: elseJson
         }
     }
 
@@ -158,7 +163,7 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
     visitParam_list(ctx: Param_listContext): any {
         return {
             tag: "paramList",
-            prms: ctx.param().map(this.visit)
+            prms: ctx.param().map(stmt => this.visit(stmt))
         }
     }
 
@@ -170,10 +175,15 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
     }
 
     visitFn_decl_expr(ctx: Fn_decl_stmtContext): any {
+        let returnTypeBlock = ctx.return_type()
+        let returnType = undefined
+        if (returnTypeBlock !== null) {
+            returnType = this.visit(returnTypeBlock).type
+        }
         return {
             tag: "fun",
             sym: ctx.IDENT().getText(),
-            retType: this.visit(ctx.return_type())?.type,
+            retType: returnType,
             prms: this.visit(ctx.param_list()).prms,
             body: this.visit(ctx.block())
         }
@@ -190,7 +200,7 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
     visitArgument_list(ctx: Argument_listContext): any {
         return {
             tag: "arg_list",
-            args: ctx.expr().map(this.visit)
+            args: ctx.expr().map(stmt => this.visit(stmt))
         }
     }
 
@@ -213,7 +223,7 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
         if (bool_lit !== null) {
             return {
                 tag: "lit",
-                val: int_lit.getText() === "true"
+                val: bool_lit.getText() === "true"
             }
         }
     }

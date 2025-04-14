@@ -72,7 +72,9 @@ export class RustCompiler {
             this.instrs[this.wc++] = goto_instruction;
             const alternative_address = this.wc;
             jump_on_false_instruction.addr = alternative_address;
-            this.compile(comp.alt, ce)
+            if (comp.alt !== undefined) {
+                this.compile(comp.alt, ce)
+            }
             goto_instruction.addr = this.wc
         },
     while:
@@ -160,7 +162,9 @@ export class RustCompiler {
                         body: comp.body,
                         retType: comp.retType}},
                 ce)
-        }
+        },
+    empty:
+        (comp, ce) => {}
     }
 
     // compile component into instruction array instrs,

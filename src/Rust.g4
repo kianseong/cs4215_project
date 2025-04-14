@@ -31,7 +31,7 @@ stmt
 expr
     : fn_call_expr
     | '(' expr ')'
-    | op=('!'|'-') expr
+    | op=('!'|'-unary') expr
     | expr op=('*'|'/') expr
     | expr op=('+'|'-') expr
     | expr op=('==' | '!=' | '<' | '<=' | '>' | '>=') expr
