@@ -4,6 +4,8 @@ export interface HeapInterface {
 
     Unassigned: number
 
+    initialise_empty_heap(): HeapInterface
+
     heap_allocate_Pair(head: number, tail: number): number
 
     heap_get_child(address: number, childIndex: number): number
@@ -58,6 +60,8 @@ export interface HeapInterface {
 
     is_Callframe(address: number): boolean
 
+    is_Number(address: number): boolean
+
     /**
      * Please help to initialise free!
      * sth liddis in initialise machine
@@ -73,7 +77,6 @@ export interface HeapInterface {
         heap_set(i - this.node_size, -1)
         free = 0
      */
-    initialise_empty_heap?(): HeapInterface
 
     allocate_literal_values()
 }
