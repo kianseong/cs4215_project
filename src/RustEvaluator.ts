@@ -1,8 +1,8 @@
 import { BasicEvaluator } from "conductor/dist/conductor/runner";
 import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
-import { CharStream, CommonTokenStream, AbstractParseTreeVisitor } from 'antlr4ng';
+import { CharStream, CommonTokenStream } from 'antlr4ng';
 import { RustLexer } from './parser/src/RustLexer';
-import { ExprContext, ProgContext, RustParser } from './parser/src/RustParser';
+import { RustParser } from './parser/src/RustParser';
 import {RustJsonVisitor} from './RustJsonVisitor';
 import { RustCompiler } from "./RustCompiler";
 import { RustVirtualMachine } from "./RustVirtualMachine";
@@ -26,29 +26,32 @@ export class RustEvaluator extends BasicEvaluator {
         this.machine = new RustVirtualMachine(100, 10);
     }
 
+    evaluate(chunk: string): void {
+        const inputStream = CharStream.fromString(chunk);
+        const lexer = new RustLexer(inputStream);
+        const tokenStream = new CommonTokenStream(lexer);
+        const parser = new RustParser(tokenStream);
+
+        // Parse the input
+        const tree = parser.prog();
+
+        // Evaluate the parsed tree
+        this.sendOut('Ran to here');
+        const jsonProgram = this.visitor.visit(tree);
+        this.sendOut(JSON.stringify(jsonProgram))
+
+        // Compile json program
+        const compiledProgram = this.compiler.compile_program(jsonProgram)
+
+        // run VM and get result
+        this.machine.initialize_machine()
+        return this.machine.run(compiledProgram)
+    }
+
     async evaluateChunk(chunk: string): Promise<void> {
         this.executionCount++;
         try {
-            // Create the lexer and parser
-            const inputStream = CharStream.fromString(chunk);
-            const lexer = new RustLexer(inputStream);
-            const tokenStream = new CommonTokenStream(lexer);
-            const parser = new RustParser(tokenStream);
-
-            // Parse the input
-            const tree = parser.prog();
-
-            // Evaluate the parsed tree
-            this.sendOut('Ran to here');
-            const jsonProgram = this.visitor.visit(tree);
-            this.sendOut(JSON.stringify(jsonProgram))
-
-            // Compile json program
-            const compiledProgram = this.compiler.compile_program(jsonProgram)
-
-            // run VM and get result
-            this.machine.initialize_machine()
-            const result = this.machine.run(compiledProgram)
+            const result = this.evaluate(chunk)
 
             // Send the result to the REPL
             this.conductor.sendOutput(`Result of expression: ${result}`);
