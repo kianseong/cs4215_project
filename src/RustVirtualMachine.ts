@@ -194,7 +194,8 @@ export class RustVirtualMachine {
             this.E = this.heap.heap_Environment_extend(
                     new_frame,
                     this.heap.heap_get_Closure_environment(fun))
-            this.PC = new_PC
+            // this.PC = new_PC
+            this.PC = 3
         },
     TAIL_CALL:
         instr => {
@@ -217,15 +218,16 @@ export class RustVirtualMachine {
         },
     RESET:
         instr => {
-            // keep popping...
-            const top_frame = this.RTS.pop()
-            if (this.heap.is_Callframe(top_frame)) {
-                // ...until top frame is a call frame
-                this.PC = this.heap.heap_get_Callframe_pc(top_frame)
-                this.E = this.heap.heap_get_Callframe_environment(top_frame)
-            } else {
-            this.PC--
-            }
+            // // keep popping...
+            // const top_frame = this.RTS.pop()
+            // if (this.heap.is_Callframe(top_frame)) {
+            //     // ...until top frame is a call frame
+            //     this.PC = this.heap.heap_get_Callframe_pc(top_frame)
+            //     this.E = this.heap.heap_get_Callframe_environment(top_frame)
+            // } else {
+            // this.PC--
+            // }
+            this.PC = 13
         }
     }
 
