@@ -250,13 +250,13 @@ export class Heap implements HeapInterface {
                                         ? "<closure>"
                                         : this.is_Builtin(address)
                                             ? "<builtin>"
-                                            : "unknown word tag: " + this.word_to_string(address)
+                                            : "undefined"
 
     }
 
     public JS_value_to_address(value: any): number {
          return this.is_Boolean(value)
-            ? (value ? 0 : 1)
+            ? (value ? true : false)
             : this.is_Number(value)
                 ? this.heap_allocate_Number(value)
                 : this.is_Undefined(value)
