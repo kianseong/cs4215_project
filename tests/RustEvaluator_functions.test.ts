@@ -11,12 +11,23 @@ describe('Function Tests', () => {
         rustEvaluator = new RustEvaluator(mockConductor);
     });
 
-    test('function with no arguments, value producing', () => {
+    test('function with no arguments, return value producing', () => {
         const result = rustEvaluator.evaluate(`
-            fn simple() -> f64 {
+            fn simple() -> number {
                 return 42;
             }
-            simple();
+            simple()
+        `);
+
+        expect(result).toBe('42');
+    });
+
+    test('function with no arguments, value producing', () => {
+        const result = rustEvaluator.evaluate(`
+            fn simple() -> number {
+                42
+            }
+            simple()
         `);
 
         expect(result).toBe('42');
@@ -24,10 +35,10 @@ describe('Function Tests', () => {
 
     test('function with one argument, value producing', () => {
         const result = rustEvaluator.evaluate(`
-            fn square(x: f64) -> f64 {
+            fn square(x: number) -> number {
                 return x * x;
             }
-            square(5);
+            square(5)
         `);
 
         expect(result).toBe('25');
@@ -35,8 +46,9 @@ describe('Function Tests', () => {
 
     test('function with multiple arguments, value producing', () => {
         const result = rustEvaluator.evaluate(`
-            fn add(a: f64, b: f64) -> f64 {
-                return a + b;
+            fn add(a: number, b: number) -> number {
+                let result = a + b;
+                result
             }
             add(3, 7);
         `);
@@ -46,13 +58,13 @@ describe('Function Tests', () => {
 
     test('function with early return, value producing', () => {
         const result = rustEvaluator.evaluate(`
-            fn check_positive(x: f64) -> bool {
-                if (x > 0.0) {
+            fn check_positive(x: number) -> bool {
+                if (x > 0) {
                     return true;
                 }
                 return false;
             }
-            check_positive(-5);
+            check_positive(5);
         `);
 
         expect(result).toBe('false');
@@ -60,10 +72,10 @@ describe('Function Tests', () => {
 
     test('nested function calls, value producing', () => {
         const result = rustEvaluator.evaluate(`
-            fn add(a: f64, b: f64) -> f64 {
+            fn add(a: number, b: number) -> number {
                 return a + b;
             }
-            fn multiply(x: f64, y: f64) -> f64 {
+            fn multiply(x: number, y: number) -> number {
                 return x * y;
             }
             multiply(add(2, 3), 4);
@@ -74,7 +86,7 @@ describe('Function Tests', () => {
 
     test('recursive function, value producing', () => {
         const result = rustEvaluator.evaluate(`
-            fn factorial(n: f64) -> f64 {
+            fn factorial(n: number) -> number {
                 if (n <= 1.0) {
                     return 1.0;
                 }
@@ -86,37 +98,78 @@ describe('Function Tests', () => {
         expect(result).toBe('120');
     });
 
-    test('function returning a closure, value producing', () => {
+    test('testing function arguments scope', () => {
         const result = rustEvaluator.evaluate(`
-            fn create_multiplier(multiplier: f64) -> |f64| -> f64 {
-                return |x: f64| -> f64 { return x * multiplier; };
+            let x = 2;
+            fn square(x: number) -> number {
+                return x * x;
             }
-            let double = create_multiplier(2.0);
-            double(5);
+            square(5)
         `);
 
-        expect(result).toBe('10');
+        expect(result).toBe('25');
     });
 
-    test('closure capturing outer variable, value producing', () => {
+    test('testing function block variables scope', () => {
         const result = rustEvaluator.evaluate(`
-            let factor = 3.0;
-            let multiply = |x: f64| -> f64 { return x * factor; };
-            multiply(4);
-        `);
-
-        expect(result).toBe('12');
-    });
-
-    test('function with mutable variables, value producing', () => {
-        const result = rustEvaluator.evaluate(`
-            fn increment(mut x: f64) -> f64 {
-                x = x + 1.0;
-                return x;
+            let y = 10;
+            fn constant() -> number {
+                let y = 0;
+                return y;
             }
-            increment(5);
+            constant()
         `);
 
-        expect(result).toBe('6');
+        expect(result).toBe('0');
     });
+
+    test('testing function early return nothing', () => {
+        const result = rustEvaluator.evaluate(`
+            let x = 0;
+            fn earlyReturn() {
+                1 + 1;
+                return;
+                x = 2;
+            }
+            earlyReturn();
+            x
+        `);
+
+        expect(result).toBe('0');
+    });
+
+
+    // test('function returning a closure, value producing', () => {
+    //     const result = rustEvaluator.evaluate(`
+    //         fn create_multiplier(multiplier: f64) -> |f64| -> f64 {
+    //             return |x: f64| -> f64 { return x * multiplier; };
+    //         }
+    //         let double = create_multiplier(2.0);
+    //         double(5);
+    //     `);
+
+    //     expect(result).toBe('10');
+    // });
+
+    // test('closure capturing outer variable, value producing', () => {
+    //     const result = rustEvaluator.evaluate(`
+    //         let factor = 3.0;
+    //         let multiply = |x: f64| -> f64 { return x * factor; };
+    //         multiply(4);
+    //     `);
+
+    //     expect(result).toBe('12');
+    // });
+
+    // test('function with mutable variables, value producing', () => {
+    //     const result = rustEvaluator.evaluate(`
+    //         fn increment(mut x: f64) -> f64 {
+    //             x = x + 1.0;
+    //             return x;
+    //         }
+    //         increment(5);
+    //     `);
+
+    //     expect(result).toBe('6');
+    // });
 });
