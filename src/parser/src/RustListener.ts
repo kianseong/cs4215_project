@@ -3,6 +3,7 @@
 import { ErrorNode, ParseTreeListener, ParserRuleContext, TerminalNode } from "antlr4ng";
 
 
+import { LitContext } from "./RustParser.js";
 import { ProgContext } from "./RustParser.js";
 import { StmtContext } from "./RustParser.js";
 import { ExprContext } from "./RustParser.js";
@@ -23,7 +24,6 @@ import { Fn_decl_stmtContext } from "./RustParser.js";
 import { Fn_call_exprContext } from "./RustParser.js";
 import { Argument_listContext } from "./RustParser.js";
 import { Return_stmtContext } from "./RustParser.js";
-import { LitContext } from "./RustParser.js";
 
 
 /**
@@ -31,6 +31,16 @@ import { LitContext } from "./RustParser.js";
  * `RustParser`.
  */
 export class RustListener implements ParseTreeListener {
+    /**
+     * Enter a parse tree produced by `RustParser.lit`.
+     * @param ctx the parse tree
+     */
+    enterLit?: (ctx: LitContext) => void;
+    /**
+     * Exit a parse tree produced by `RustParser.lit`.
+     * @param ctx the parse tree
+     */
+    exitLit?: (ctx: LitContext) => void;
     /**
      * Enter a parse tree produced by `RustParser.prog`.
      * @param ctx the parse tree
@@ -231,16 +241,6 @@ export class RustListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitReturn_stmt?: (ctx: Return_stmtContext) => void;
-    /**
-     * Enter a parse tree produced by `RustParser.lit`.
-     * @param ctx the parse tree
-     */
-    enterLit?: (ctx: LitContext) => void;
-    /**
-     * Exit a parse tree produced by `RustParser.lit`.
-     * @param ctx the parse tree
-     */
-    exitLit?: (ctx: LitContext) => void;
 
     visitTerminal(node: TerminalNode): void {}
     visitErrorNode(node: ErrorNode): void {}

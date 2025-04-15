@@ -47,7 +47,7 @@ describe('Function Tests', () => {
     test('function with multiple arguments, value producing', () => {
         const result = rustEvaluator.evaluate(`
             fn add(a: number, b: number) -> number {
-                let result = a + b;
+                let result: number = a + b;
                 result
             }
             add(3, 7);
@@ -78,7 +78,7 @@ describe('Function Tests', () => {
             fn multiply(x: number, y: number) -> number {
                 return x * y;
             }
-            multiply(add(2, 3), 4);
+            multiply(add(2, 3), 4)
         `);
 
         expect(result).toBe('20');
@@ -87,10 +87,10 @@ describe('Function Tests', () => {
     test('recursive function, value producing', () => {
         const result = rustEvaluator.evaluate(`
             fn factorial(n: number) -> number {
-                if (n <= 1.0) {
-                    return 1.0;
-                }
-                return n * factorial(n - 1.0);
+                if (n <= 1) {
+                    return 1;
+                };
+                return n * factorial(n - 1);
             }
             factorial(5);
         `);
@@ -100,7 +100,7 @@ describe('Function Tests', () => {
 
     test('testing function arguments scope', () => {
         const result = rustEvaluator.evaluate(`
-            let x = 2;
+            let x: number = 2;
             fn square(x: number) -> number {
                 return x * x;
             }
@@ -112,9 +112,9 @@ describe('Function Tests', () => {
 
     test('testing function block variables scope', () => {
         const result = rustEvaluator.evaluate(`
-            let y = 10;
+            let y: number = 10;
             fn constant() -> number {
-                let y = 0;
+                let y: number = 0;
                 return y;
             }
             constant()
@@ -125,7 +125,7 @@ describe('Function Tests', () => {
 
     test('testing function early return nothing', () => {
         const result = rustEvaluator.evaluate(`
-            let x = 0;
+            let x: number = 0;
             fn earlyReturn() {
                 1 + 1;
                 return;

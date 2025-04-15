@@ -12,13 +12,23 @@ KW_RETURN : 'return';
 KW_LET : 'let';
 KW_MUT : 'mut';
 
+// lits
+
+lit: INT | BOOL;
+
+INT: [0-9]+;
+BOOL: 'true' | 'false';
+TYPE: 'bool' | 'number';
+IDENT: [a-zA-Z_][a-zA-Z0-9_]* ;
+
 
 prog: stmt* expr? EOF;
 
 stmt
-    : block
-    | fn_decl_stmt
+    : fn_decl_stmt
     | while_stmt
+    | block
+    | assignment_stmt
     | declaration_stmt
     | return_stmt
     | expr_stmt
@@ -79,21 +89,12 @@ return_type:
 fn_decl_stmt:
     KW_FN IDENT '(' param_list? ')' return_type? block;
 
-fn_call_expr: IDENT '(' argument_list ')';
+fn_call_expr: IDENT '(' argument_list? ')';
 
 argument_list: expr (',' expr)*?;
 
 return_stmt: KW_RETURN expr? ';';
 
-
-// lits
-
-lit: INT | BOOL;
-
-INT: [0-9]+;
-BOOL: 'true' | 'false';
-TYPE: 'bool' | 'number';
-IDENT: [a-zA-Z_][a-zA-Z0-9_]* ;
 
 // ignored
 WS: [ \t\r\n]+ -> skip;

@@ -193,10 +193,16 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
     }
 
     visitFn_call_expr(ctx: Fn_call_exprContext): any {
+        let args 
+        if (ctx.argument_list() == null) {
+            args = []
+        } else {
+            args = this.visit(ctx.argument_list()).args
+        }
         return {
             tag: "app",
             fun: ctx.IDENT().getText(),
-            args: this.visit(ctx.argument_list()).args
+            args: args
         }
     }
 

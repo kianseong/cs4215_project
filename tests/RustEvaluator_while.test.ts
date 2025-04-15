@@ -14,7 +14,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on while loops',
     const rustEvaluator = new RustEvaluator(mockConductor);
 
     const result = rustEvaluator.evaluate(`
-        let x: number = 0
+        let x: number = 0;
         while (false) {
             x += 1;
         }
@@ -28,7 +28,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on while loops',
     const rustEvaluator = new RustEvaluator(mockConductor);
 
     const result = rustEvaluator.evaluate(`
-        let x: number = 0
+        let x: number = 0;
         while (false) {
             x = x + 1;
         }
@@ -42,7 +42,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on while loops',
     const rustEvaluator = new RustEvaluator(mockConductor);
 
     const result = rustEvaluator.evaluate(`
-        let x: number = 0
+        let x: number = 0;
         while (x < 5) {
             x = x + 1;
             x
@@ -56,7 +56,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on while loops',
     const rustEvaluator = new RustEvaluator(mockConductor);
 
     const result = rustEvaluator.evaluate(`
-        let x: number = 0
+        let x: number = 0;
         while (x < 5) {
             x = x + 1;
             x;

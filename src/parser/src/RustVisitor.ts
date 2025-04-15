@@ -3,6 +3,7 @@
 import { AbstractParseTreeVisitor } from "antlr4ng";
 
 
+import { LitContext } from "./RustParser.js";
 import { ProgContext } from "./RustParser.js";
 import { StmtContext } from "./RustParser.js";
 import { ExprContext } from "./RustParser.js";
@@ -23,7 +24,6 @@ import { Fn_decl_stmtContext } from "./RustParser.js";
 import { Fn_call_exprContext } from "./RustParser.js";
 import { Argument_listContext } from "./RustParser.js";
 import { Return_stmtContext } from "./RustParser.js";
-import { LitContext } from "./RustParser.js";
 
 
 /**
@@ -34,6 +34,12 @@ import { LitContext } from "./RustParser.js";
  * operations with no return type.
  */
 export class RustVisitor<Result> extends AbstractParseTreeVisitor<Result> {
+    /**
+     * Visit a parse tree produced by `RustParser.lit`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitLit?: (ctx: LitContext) => Result;
     /**
      * Visit a parse tree produced by `RustParser.prog`.
      * @param ctx the parse tree
@@ -154,11 +160,5 @@ export class RustVisitor<Result> extends AbstractParseTreeVisitor<Result> {
      * @return the visitor result
      */
     visitReturn_stmt?: (ctx: Return_stmtContext) => Result;
-    /**
-     * Visit a parse tree produced by `RustParser.lit`.
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    visitLit?: (ctx: LitContext) => Result;
 }
 
