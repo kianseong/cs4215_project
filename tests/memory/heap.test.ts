@@ -11,53 +11,111 @@ describe('Heap', () => {
         heap.allocate_literal_values();
     });
 
-    // Test Pair Allocation
+    it('should allocate a number and retrieve it', () => {
+        const num = 123;
+        const addr = heap.heap_allocate_Number(num);
+
+        expect(addr).toBeGreaterThan(0);
+        expect(heap.is_Number(addr)).toBe(true);
+        expect(heap.get(addr + 1)).toBe(num);
+    });
+
     it('should allocate a pair and correctly set head and tail values', () => {
         const head = 42;
         const tail = 99;
         const pairAddress = heap.heap_allocate_Pair(head, tail);
 
         expect(pairAddress).toBeGreaterThan(0);
+        expect(heap.is_Pair(pairAddress)).toBe(true);
         expect(heap.heap_get_child(pairAddress, 0)).toBe(head);
         expect(heap.heap_get_child(pairAddress, 1)).toBe(tail);
     });
 
-    it('should correctly identify a pair using is_Pair', () => {
-        const pairAddress = heap.heap_allocate_Pair(1, 2);
-        expect(heap.is_Pair(pairAddress)).toBe(true);
+    it('should allocate a frame', () => {
+        const size = 4;
+        const addr = heap.heap_allocate_Frame(size);
+
+        expect(addr).toBeGreaterThan(0);
     });
 
-    it('should return false for non-pair addresses', () => {
-        const numAddress = heap.heap_allocate_Number(123);
-        expect(heap.is_Pair(numAddress)).toBe(false);
+    it('should allocate a blockframe with builtin_id', () => {
+        const id = 7;
+        const addr = heap.heap_allocate_Blockframe(id);
+
+        expect(addr).toBeGreaterThan(0);
+        expect(heap.get(addr + 1)).toBe(id);
     });
 
-    // Test Number Allocation
-    it('should allocate a number and store its value correctly', () => {
-        const numberValue = 123.45;
-        const numAddress = heap.heap_allocate_Number(numberValue);
+    it('should allocate a builtin and retrieve its id', () => {
+        const id = 3;
+        const addr = heap.heap_allocate_Builtin(id);
 
-        expect(numAddress).toBeGreaterThan(0);
-        expect(heap.get(numAddress + 1)).toBe(numberValue);
+        expect(addr).toBeGreaterThan(0);
+        expect(heap.is_Builtin(addr)).toBe(true);
+        expect(heap.heap_get_Builtin_id(addr)).toBe(id);
     });
 
-    it('should correctly identify a number using is_Number', () => {
-        const numAddress = heap.heap_allocate_Number(678.90);
-        expect(heap.is_Number(numAddress)).toBe(true);
+    it('should allocate a closure', () => {
+        const arity = 2;
+        const address = 42;
+        const env = 99;
+        const addr = heap.heap_allocate_Closure(arity, address, env);
+
+        expect(addr).toBeGreaterThan(0);
+        expect(heap.is_Closure(addr)).toBe(true);
+        expect(heap.heap_get_Closure_pc(addr)).toBe(address);
+        expect(heap.heap_get_Closure_environment(addr)).toBe(env);
     });
 
-    it('should return false for non-number addresses', () => {
-        const pairAddress = heap.heap_allocate_Pair(1, 2);
-        expect(heap.is_Number(pairAddress)).toBe(false);
+    it('should allocate a callframe', () => {
+        const env = 123;
+        const pc = 456;
+        const addr = heap.heap_allocate_Callframe(env, pc);
+
+        expect(addr).toBeGreaterThan(0);
+        expect(heap.is_Callframe(addr)).toBe(true);
+        expect(heap.heap_get_Callframe_pc(addr)).toBe(pc);
+        expect(heap.heap_get_Callframe_environment(addr)).toBe(env);
     });
 
-    // Test Blockframe Allocation
-    it('should allocate a blockframe and store the builtin_id', () => {
-        const builtinId = 42;
-        const blockframeAddress = heap.heap_allocate_Blockframe(builtinId);
+    it('should allocate and extend environment', () => {
+        const frame1 = heap.heap_allocate_Frame(1);
+        const env1 = heap.heap_allocate_Environment(1);
+        heap.heap_set_child(env1, 0, frame1);
 
-        expect(blockframeAddress).toBeGreaterThan(0);
-        expect(heap.get(blockframeAddress + 1)).toBe(builtinId);
+        const frame2 = heap.heap_allocate_Frame(1);
+        const extended = heap.heap_Environment_extend(frame2, env1);
+
+        expect(extended).toBeGreaterThan(0);
+        expect(heap.heap_get_child(extended, 0)).toBe(frame1);
+        expect(heap.heap_get_child(extended, 1)).toBe(frame2);
+    });
+
+    it('should convert number address to JS value', () => {
+        const num = 5;
+        const addr = heap.heap_allocate_Number(num);
+
+        expect(heap.address_to_JS_value(addr)).toBe(num);
+    });
+
+    it('should convert pair address to JS array', () => {
+        const h = heap.heap_allocate_Number(10);
+        const t = heap.heap_allocate_Number(20);
+        const pair = heap.heap_allocate_Pair(h, t);
+
+        expect(heap.address_to_JS_value(pair)).toEqual([
+            heap.address_to_JS_value(h),
+            heap.address_to_JS_value(t)
+        ]);
+    });
+
+    it('should retrieve byte and 2-byte values at offsets', () => {
+        const addr = heap.heap_allocate_Builtin(0);
+        heap.heap_set_byte_at_offset(addr, 1, 123);
+        expect(heap.heap_get_byte_at_offset(addr, 1)).toBe(123);
+
+        heap.heap_set_2_bytes_at_offset(addr, 2, 456);
+        expect(heap.heap_get_2_bytes_at_offset(addr, 2)).toBe(456);
     });
 
 });

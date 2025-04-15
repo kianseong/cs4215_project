@@ -158,7 +158,7 @@ export class Heap implements HeapInterface {
 
         let i: number;
         for (i = 0; i < old_size - 1; i++) {
-            this.heap_set_child(new_env, i, this.heap_get_child(env, 1));
+            this.heap_set_child(new_env, i, this.heap_get_child(env, i));
         }
         this.heap_set_child(new_env, i, frame_address);
         return new_env;
