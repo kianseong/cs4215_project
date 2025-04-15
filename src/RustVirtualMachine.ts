@@ -35,6 +35,7 @@ export class RustVirtualMachine {
         //print_code()
         this.initialize_machine()
         while (! (instrs[this.PC].tag === 'DONE')) {
+            
             //heap_display()
             //display(PC, "PC: ")
             //display(instrs[PC].tag, "instr: ")
@@ -47,6 +48,7 @@ export class RustVirtualMachine {
         }
         //display(OS, "\nfinal operands:           ")
         //print_OS()
+        console.log(this.OS[0])
         return this.heap.address_to_JS_value(this.OS[0])
     }
 

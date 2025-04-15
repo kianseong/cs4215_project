@@ -1,5 +1,5 @@
 import { AbstractParseTreeVisitor } from 'antlr4ng';
-import { ParamContext, StmtContext, ExprContext, ProgContext, LitContext, Return_stmtContext, Argument_listContext, Fn_call_exprContext, Fn_decl_stmtContext, Return_typeContext, Param_listContext, Assignment_stmtContext, Declaration_stmtContext, Break_stmtContext, Continue_stmtContext, If_stmtContext, Else_stmtContext, While_stmtContext, Expr_stmtContext, BlockContext, Empty_stmtContext} from './parser/src/RustParser';
+import { ParamContext, StmtContext, ExprContext, ProgContext, LitContext, Return_stmtContext, Argument_listContext, Fn_call_exprContext, Fn_decl_stmtContext, Return_typeContext, Param_listContext, Assignment_stmtContext, Declaration_stmtContext, Break_stmtContext, Continue_stmtContext, If_exprContext, Else_exprContext, While_stmtContext, Expr_stmtContext, BlockContext, Empty_stmtContext} from './parser/src/RustParser';
 import { RustVisitor } from './parser/src/RustVisitor';
 
 export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements RustVisitor<any> {
@@ -31,6 +31,9 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
     }
 
     visitExpr(ctx: ExprContext): any {
+        if (ctx.if_expr() != null) {
+            return this.visit(ctx.if_expr())
+        }
         if (ctx.lit() !== null) {
             return this.visit(ctx.lit())
         }
@@ -113,8 +116,8 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
         }
     }
 
-    visitIf_stmt(ctx: If_stmtContext): any {
-        let elseBlock = ctx.else_stmt()
+    visitIf_expr(ctx: If_exprContext): any {
+        let elseBlock = ctx.else_expr()
         let elseJson = undefined
         if (elseBlock !== null) {
             elseJson = this.visit(elseBlock).alt
@@ -127,7 +130,7 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
         }
     }
 
-    visitElse_stmt(ctx: Else_stmtContext): any {
+    visitElse_expr(ctx: Else_exprContext): any {
         return {
             tag: "condElse",
             alt: this.visit(ctx.block())

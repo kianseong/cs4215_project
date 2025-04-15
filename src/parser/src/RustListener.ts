@@ -12,8 +12,8 @@ import { Empty_stmtContext } from "./RustParser.js";
 import { While_stmtContext } from "./RustParser.js";
 import { Break_stmtContext } from "./RustParser.js";
 import { Continue_stmtContext } from "./RustParser.js";
-import { If_stmtContext } from "./RustParser.js";
-import { Else_stmtContext } from "./RustParser.js";
+import { If_exprContext } from "./RustParser.js";
+import { Else_exprContext } from "./RustParser.js";
 import { Declaration_stmtContext } from "./RustParser.js";
 import { Assignment_stmtContext } from "./RustParser.js";
 import { ParamContext } from "./RustParser.js";
@@ -122,25 +122,25 @@ export class RustListener implements ParseTreeListener {
      */
     exitContinue_stmt?: (ctx: Continue_stmtContext) => void;
     /**
-     * Enter a parse tree produced by `RustParser.if_stmt`.
+     * Enter a parse tree produced by `RustParser.if_expr`.
      * @param ctx the parse tree
      */
-    enterIf_stmt?: (ctx: If_stmtContext) => void;
+    enterIf_expr?: (ctx: If_exprContext) => void;
     /**
-     * Exit a parse tree produced by `RustParser.if_stmt`.
+     * Exit a parse tree produced by `RustParser.if_expr`.
      * @param ctx the parse tree
      */
-    exitIf_stmt?: (ctx: If_stmtContext) => void;
+    exitIf_expr?: (ctx: If_exprContext) => void;
     /**
-     * Enter a parse tree produced by `RustParser.else_stmt`.
+     * Enter a parse tree produced by `RustParser.else_expr`.
      * @param ctx the parse tree
      */
-    enterElse_stmt?: (ctx: Else_stmtContext) => void;
+    enterElse_expr?: (ctx: Else_exprContext) => void;
     /**
-     * Exit a parse tree produced by `RustParser.else_stmt`.
+     * Exit a parse tree produced by `RustParser.else_expr`.
      * @param ctx the parse tree
      */
-    exitElse_stmt?: (ctx: Else_stmtContext) => void;
+    exitElse_expr?: (ctx: Else_exprContext) => void;
     /**
      * Enter a parse tree produced by `RustParser.declaration_stmt`.
      * @param ctx the parse tree

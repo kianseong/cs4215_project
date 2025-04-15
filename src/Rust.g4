@@ -19,7 +19,6 @@ stmt
     : block
     | fn_decl_stmt
     | while_stmt
-    | if_stmt
     | declaration_stmt
     | return_stmt
     | expr_stmt
@@ -29,7 +28,8 @@ stmt
     ;
 
 expr
-    : fn_call_expr
+    : if_expr
+    | fn_call_expr
     | '(' expr ')'
     | op=('!'|'-unary') expr
     | expr op=('*'|'/') expr
@@ -53,9 +53,9 @@ break_stmt: KW_BREAK;
 
 continue_stmt: KW_CONTINUE;
 
-if_stmt: KW_IF expr block else_stmt?;
+if_expr: KW_IF expr block else_expr?;
 
-else_stmt: KW_ELSE block;
+else_expr: KW_ELSE block;
 
 
 // variables

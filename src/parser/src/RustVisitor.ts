@@ -12,8 +12,8 @@ import { Empty_stmtContext } from "./RustParser.js";
 import { While_stmtContext } from "./RustParser.js";
 import { Break_stmtContext } from "./RustParser.js";
 import { Continue_stmtContext } from "./RustParser.js";
-import { If_stmtContext } from "./RustParser.js";
-import { Else_stmtContext } from "./RustParser.js";
+import { If_exprContext } from "./RustParser.js";
+import { Else_exprContext } from "./RustParser.js";
 import { Declaration_stmtContext } from "./RustParser.js";
 import { Assignment_stmtContext } from "./RustParser.js";
 import { ParamContext } from "./RustParser.js";
@@ -89,17 +89,17 @@ export class RustVisitor<Result> extends AbstractParseTreeVisitor<Result> {
      */
     visitContinue_stmt?: (ctx: Continue_stmtContext) => Result;
     /**
-     * Visit a parse tree produced by `RustParser.if_stmt`.
+     * Visit a parse tree produced by `RustParser.if_expr`.
      * @param ctx the parse tree
      * @return the visitor result
      */
-    visitIf_stmt?: (ctx: If_stmtContext) => Result;
+    visitIf_expr?: (ctx: If_exprContext) => Result;
     /**
-     * Visit a parse tree produced by `RustParser.else_stmt`.
+     * Visit a parse tree produced by `RustParser.else_expr`.
      * @param ctx the parse tree
      * @return the visitor result
      */
-    visitElse_stmt?: (ctx: Else_stmtContext) => Result;
+    visitElse_expr?: (ctx: Else_exprContext) => Result;
     /**
      * Visit a parse tree produced by `RustParser.declaration_stmt`.
      * @param ctx the parse tree
