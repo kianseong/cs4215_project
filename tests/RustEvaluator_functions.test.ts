@@ -11,6 +11,17 @@ describe('Function Tests', () => {
         rustEvaluator = new RustEvaluator(mockConductor);
     });
 
+    test('function with no arguments no return value', () => {
+        const result = rustEvaluator.evaluate(`
+            fn simple() {
+                1;
+            }
+            simple()
+        `);
+
+        expect(result).toBe('42');
+    });
+
     test('function with no arguments, return value producing', () => {
         const result = rustEvaluator.evaluate(`
             fn simple() -> number {
@@ -61,7 +72,7 @@ describe('Function Tests', () => {
             fn check_positive(x: number) -> bool {
                 if (x > 0) {
                     return true;
-                }
+                };
                 return false;
             }
             check_positive(5);

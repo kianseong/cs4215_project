@@ -21,7 +21,7 @@ export class RustEvaluator extends BasicEvaluator {
         this.machine = new RustVirtualMachine();
     }
 
-    evaluate(chunk: string): void {
+    evaluate(chunk: string): any {
         const inputStream = CharStream.fromString(chunk);
         const lexer = new RustLexer(inputStream);
         const tokenStream = new CommonTokenStream(lexer);
@@ -36,6 +36,7 @@ export class RustEvaluator extends BasicEvaluator {
 
         // Compile json program
         const compiledProgram = this.compiler.compile_program(jsonProgram)
+        console.log(compiledProgram)
 
         // run VM and get result
         this.machine.initialize_machine()

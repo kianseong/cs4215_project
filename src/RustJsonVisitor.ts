@@ -177,31 +177,38 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
         }
     }
 
-    visitFn_decl_expr(ctx: Fn_decl_stmtContext): any {
+    visitFn_decl_stmt(ctx: Fn_decl_stmtContext): any {
         let returnTypeBlock = ctx.return_type()
         let returnType = undefined
         if (returnTypeBlock !== null) {
             returnType = this.visit(returnTypeBlock).type
         }
+
+        let paramListBlock = ctx.param_list()
+        let paramList = []
+        if (paramListBlock !== null) {
+            paramList = this.visit(ctx.param_list()).prms
+        }
         return {
             tag: "fun",
             sym: ctx.IDENT().getText(),
             retType: returnType,
-            prms: this.visit(ctx.param_list()).prms,
+            prms: paramList,
             body: this.visit(ctx.block())
         }
     }
 
     visitFn_call_expr(ctx: Fn_call_exprContext): any {
-        let args 
-        if (ctx.argument_list() == null) {
-            args = []
-        } else {
+        let args = []
+        if (ctx.argument_list() !== null) {
             args = this.visit(ctx.argument_list()).args
         }
         return {
             tag: "app",
-            fun: ctx.IDENT().getText(),
+            fun: {
+                tag: "nam",
+                sym: ctx.IDENT().getText()
+                },
             args: args
         }
     }
@@ -214,9 +221,15 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
     }
 
     visitReturn_stmt(ctx: Return_stmtContext): any {
+        let return_expr
+        if (ctx.expr() === null) {
+            return_expr = null
+        } else {
+            return_expr = this.visit(ctx.expr())
+        }
         return {
             tag: "ret",
-            expr: ctx.expr()
+            expr: return_expr
         }
     }
 
