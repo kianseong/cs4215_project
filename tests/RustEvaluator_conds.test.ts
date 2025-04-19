@@ -19,7 +19,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing if el
         }
     `);
 
-    expect(result).toBe('2');
+    expect(result).toBe(2);
   });
 
   test('if only, if is true, value supressed', () => {
@@ -31,7 +31,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing if el
         }
     `);
 
-    expect(result).toBe('undefined');
+    expect(result).toBe(undefined);
   });
 
   test('if only, if is false', () => {
@@ -43,7 +43,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing if el
         }
     `);
 
-    expect(result).toBe('undefined');
+    expect(result).toBe(undefined);
   });
 
   test('if else, if is true, value producing', () => {
@@ -57,7 +57,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing if el
         }
     `);
 
-    expect(result).toBe('8');
+    expect(result).toBe(8);
   });
 
   test('if else, if is false, value producing', () => {
@@ -71,7 +71,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing if el
         }
     `);
 
-    expect(result).toBe('10');
+    expect(result).toBe(10);
   });
 
   test('if else, if is false, value suppressed', () => {
@@ -85,6 +85,6 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing if el
         }
     `);
 
-    expect(result).toBe('undefined');
+    expect(result).toBe(undefined);
   });
 });

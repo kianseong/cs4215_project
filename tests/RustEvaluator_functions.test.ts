@@ -19,7 +19,7 @@ describe('Function Tests', () => {
             simple()
         `);
 
-        expect(result).toBe('42');
+        expect(result).toBe(undefined);
     });
 
     test('function with no arguments, return value producing', () => {
@@ -30,7 +30,7 @@ describe('Function Tests', () => {
             simple()
         `);
 
-        expect(result).toBe('42');
+        expect(result).toBe(42);
     });
 
     test('function with no arguments, value producing', () => {
@@ -41,7 +41,7 @@ describe('Function Tests', () => {
             simple()
         `);
 
-        expect(result).toBe('42');
+        expect(result).toBe(42);
     });
 
     test('function with one argument, value producing', () => {
@@ -52,7 +52,7 @@ describe('Function Tests', () => {
             square(5)
         `);
 
-        expect(result).toBe('25');
+        expect(result).toBe(25);
     });
 
     test('function with multiple arguments, value producing', () => {
@@ -64,7 +64,7 @@ describe('Function Tests', () => {
             add(3, 7);
         `);
 
-        expect(result).toBe('10');
+        expect(result).toBe(10);
     });
 
     test('function with early return, value producing', () => {
@@ -78,7 +78,7 @@ describe('Function Tests', () => {
             check_positive(5);
         `);
 
-        expect(result).toBe('false');
+        expect(result).toBe(false);
     });
 
     test('nested function calls, value producing', () => {
@@ -92,7 +92,7 @@ describe('Function Tests', () => {
             multiply(add(2, 3), 4)
         `);
 
-        expect(result).toBe('20');
+        expect(result).toBe(20);
     });
 
     test('recursive function, value producing', () => {
@@ -106,7 +106,7 @@ describe('Function Tests', () => {
             factorial(5);
         `);
 
-        expect(result).toBe('120');
+        expect(result).toBe(120);
     });
 
     test('testing function arguments scope', () => {
@@ -118,7 +118,7 @@ describe('Function Tests', () => {
             square(5)
         `);
 
-        expect(result).toBe('25');
+        expect(result).toBe(25);
     });
 
     test('testing function block variables scope', () => {
@@ -131,7 +131,7 @@ describe('Function Tests', () => {
             constant()
         `);
 
-        expect(result).toBe('0');
+        expect(result).toBe(0);
     });
 
     test('testing function early return nothing', () => {
@@ -146,7 +146,7 @@ describe('Function Tests', () => {
             x
         `);
 
-        expect(result).toBe('0');
+        expect(result).toBe(0);
     });
 
 

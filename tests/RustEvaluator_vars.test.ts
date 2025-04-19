@@ -6,7 +6,6 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing basic
   let mockConductor: IRunnerPlugin;
 
   beforeEach(() => {
-    // Create a manual mock of IRunnerPlugin
     mockConductor = {} as IRunnerPlugin;
   });
 
@@ -28,7 +27,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing basic
         x
     `);
 
-    expect(result).toBe('1');
+    expect(result).toBe(1);
   });
 
   test('repeated variable declaration in different blocks', () => {
@@ -42,7 +41,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing basic
         x
     `);
 
-    expect(result).toBe('1');
+    expect(result).toBe(1);
   });
 
   test('repeated variable declaration in same block throws error', () => {
@@ -73,14 +72,14 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing basic
     const rustEvaluator = new RustEvaluator(mockConductor);
 
     const result = rustEvaluator.evaluate(`
-        let y: number = 4; 
+        let y: number = 4;
         {
-            let x: number = y + 7; 
+            let x: number = y + 7;
             x * 2
         }
     `);
 
-    expect(result).toBe('22');
+    expect(result).toBe(22);
   });
 
 });

@@ -5,15 +5,14 @@ export class RustCompileTimeEnvironment {
     static builtins: { [key: string]: any }
     static builtin_array: any[]
     static global_compile_environment: string[][]
-    
+
     // in this machine, the builtins take their
     // arguments directly from the operand stack,
-    // to save the creation of an intermediate 
+    // to save the creation of an intermediate
     // argument array
     private static readonly builtin_implementation: { [key: string]: any } = {
         display       : (OS: any[], heap: HeapInterface): number => {
                             const address = OS.pop()
-                            console.log(heap.address_to_JS_value(address))
                             return address
                         },
         panic         : (OS: any[], heap: HeapInterface) => {throw new Error(heap.address_to_JS_value(OS.pop()))},
@@ -37,7 +36,7 @@ export class RustCompileTimeEnvironment {
                             heap.heap_set_child(p, 1, val)
                         }
     }
-    
+
 
     static readonly constants: { [key: string]: any } = {
         undefined     : undefined,
@@ -48,7 +47,7 @@ export class RustCompileTimeEnvironment {
         math_LOG2E    : Math.LOG2E,
         math_PI       : Math.PI,
         math_SQRT1_2  : Math.SQRT1_2,
-        math_SQRT2    : Math.SQRT2 
+        math_SQRT2    : Math.SQRT2
     }
 
     static compile_time_environment_extend(vs: string[], e: string[][]): string[][] {
@@ -62,13 +61,15 @@ export class RustCompileTimeEnvironment {
         if (frame_index < 0) {
             throw new Error(`Variable ${x} has not been declared`);
         }
-        return [frame_index, 
+        return [frame_index,
                 this.value_index(env[frame_index], x)]
     }
-    
+
     static value_index(frame: string[], x: string): number {
       for (let i = 0; i < frame.length; i++) {
-        if (frame[i] === x) return i
+        if (frame[i] === x) {
+          return i
+        }
       }
       return -1;
     }
@@ -78,8 +79,8 @@ export class RustCompileTimeEnvironment {
         RustCompileTimeEnvironment.builtin_array = []
         let i: number = 0
         for (const key in RustCompileTimeEnvironment.builtin_implementation) {
-            RustCompileTimeEnvironment.builtins[key] = 
-                { tag:   'BUILTIN', 
+            RustCompileTimeEnvironment.builtins[key] =
+                { tag:   'BUILTIN',
                     id:    i,
                     arity: 0
                 }
@@ -89,5 +90,5 @@ export class RustCompileTimeEnvironment {
         let constant_compile_frame: string[] = Object.keys(RustCompileTimeEnvironment.constants)
         RustCompileTimeEnvironment.global_compile_environment = [builtin_compile_frame, constant_compile_frame]
     }
-    
+
 }

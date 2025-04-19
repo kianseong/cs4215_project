@@ -76,7 +76,7 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
     }
 
 
-    visitBlock(ctx: BlockContext): any{
+    visitBlock(ctx: BlockContext): any {
         let jsonStatements: any[] = ctx.stmt().map(stmt => this.visit(stmt))
 
         let valueProducing = false

@@ -35,20 +35,17 @@ export class RustVirtualMachine {
         //print_code()
         this.initialize_machine()
         while (! (instrs[this.PC].tag === 'DONE')) {
-            
             //heap_display()
             //display(PC, "PC: ")
             //display(instrs[PC].tag, "instr: ")
             //print_OS("\noperands:            ");
             //print_RTS("\nRTS:            ");
             const instr = instrs[this.PC++]
-            //display(instrs[PC].tag, "next instruction: ")
+            // console.log(instrs[this.PC].tag, "next instruction: ")
             this.microcode[instr.tag](instr)
-            //heap_display()
         }
         //display(OS, "\nfinal operands:           ")
         //print_OS()
-        console.log(this.OS[0])
         return this.heap.address_to_JS_value(this.OS[0])
     }
 

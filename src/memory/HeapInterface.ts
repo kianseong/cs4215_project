@@ -4,6 +4,8 @@ export interface HeapInterface {
 
     Unassigned: number
 
+    display(): void
+
     initialise_empty_heap(): HeapInterface
 
     heap_allocate_Pair(head: number, tail: number): number
@@ -31,6 +33,8 @@ export interface HeapInterface {
     JS_value_to_address(value: any): number
 
     heap_Environment_extend(frame_address: number, env: number): number
+
+    heap_Environment_display(env_address: number): void
 
     heap_get_Blockframe_environment(address: number): number
 
@@ -79,4 +83,5 @@ export interface HeapInterface {
      */
 
     allocate_literal_values()
+
 }

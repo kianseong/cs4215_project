@@ -3,7 +3,7 @@ import { IRunnerPlugin } from "conductor/dist/conductor/runner/types";
 import { CharStream, CommonTokenStream } from 'antlr4ng';
 import { RustLexer } from './parser/src/RustLexer';
 import { RustParser } from './parser/src/RustParser';
-import {RustJsonVisitor} from './RustJsonVisitor';
+import { RustJsonVisitor } from './RustJsonVisitor';
 import { RustCompiler } from "./RustCompiler";
 import { RustVirtualMachine } from "./RustVirtualMachine";
 
@@ -32,11 +32,9 @@ export class RustEvaluator extends BasicEvaluator {
 
         // Evaluate the parsed tree
         const jsonProgram = this.visitor.visit(tree);
-        console.log(jsonProgram)
 
         // Compile json program
         const compiledProgram = this.compiler.compile_program(jsonProgram)
-        console.log(compiledProgram)
 
         // run VM and get result
         this.machine.initialize_machine()
