@@ -13,21 +13,24 @@ export enum HeapTag {
     Environment = 10,
     Null = 11,
     Unassigned = 12,
-    Undefined = 13
+    Undefined = 13,
+    Free = 14 // New tag for free blocks
 }
 
 export class Heap implements HeapInterface {
     // Constants
     private static WORD_SIZE: number = 2 ** 3;
     private static HEAP_SIZE: number = 2 ** 16;
+    private static MIN_BLOCK_SIZE: number = 2; // Minimum block size in words
 
     // Offsets
     private size_offset: number = 1;
+    private next_offset: number = 2; // Offset for next pointer in free blocks
 
     // Memory
     private buffer: ArrayBuffer;
     private heap: DataView;
-    private free: number;
+    private free_list: number; // Points to the first free block
 
     // Public predefined values
     public Undefined: number;
@@ -39,7 +42,14 @@ export class Heap implements HeapInterface {
     public initialise_empty_heap(): HeapInterface {
         this.buffer = new ArrayBuffer(Heap.HEAP_SIZE);
         this.heap = new DataView(this.buffer);
-        this.free = 0;
+        
+        // Initialize the entire heap as one free block
+        const total_words = Heap.HEAP_SIZE / Heap.WORD_SIZE;
+        this.free_list = 0;
+        this.set_tag(this.free_list, HeapTag.Free);
+        this.set_size(this.free_list, total_words);
+        this.set_next(this.free_list, -1); // -1 indicates end of free list
+        
         return this;
     }
 
@@ -50,12 +60,125 @@ export class Heap implements HeapInterface {
         this.False = this.allocate(HeapTag.False, 1);
     }
 
-    // Allocation methods
-    private allocate(tag: number, size: number) {
-        const address = this.free;
-        this.free += size;
+    // New methods for free list management
+    private set_tag(address: number, tag: HeapTag): void {
+        if (address < 0 || address >= Heap.HEAP_SIZE / Heap.WORD_SIZE) {
+            throw new Error("Heap out of memory: No space available for allocation.");
+        }
         this.heap.setInt8(Heap.addressToBytes(address), tag);
+    }
+
+    private set_size(address: number, size: number): void {
         this.heap.setUint16(Heap.addressToBytes(address) + this.size_offset, size);
+    }
+
+    private set_next(address: number, next: number): void {
+        this.heap.setUint16(Heap.addressToBytes(address) + this.next_offset, next);
+    }
+
+    private get_next(address: number): number {
+        return this.heap.getUint16(Heap.addressToBytes(address) + this.next_offset);
+    }
+
+    public get_size(address: number): number {
+        const size = this.heap.getUint16(Heap.addressToBytes(address) + this.size_offset);
+        return size;
+    }
+
+    private get_tag(address: number): HeapTag {
+        return this.heap.getInt8(Heap.addressToBytes(address)) as HeapTag;
+    }
+
+    // New allocation method using free list
+    public reserve(size: number, alignment: number): number {
+        if (size < Heap.MIN_BLOCK_SIZE) {
+            size = Heap.MIN_BLOCK_SIZE;
+        }
+
+        let prev = -1;
+        let current = this.free_list;
+
+        while (current !== -1) {
+            const block_size = this.get_size(current);
+            
+            if (block_size >= size) {
+                // Found a suitable block
+                if (block_size > size + Heap.MIN_BLOCK_SIZE) {
+                    // Split the block
+                    const new_block = current + size;
+                    this.set_tag(new_block, HeapTag.Free);
+                    this.set_size(new_block, block_size - size);
+                    this.set_next(new_block, this.get_next(current));
+                    
+                    this.set_size(current, size);
+                    this.set_next(current, new_block);
+                } else {
+                    // Use the entire block
+                    this.set_next(current, this.get_next(current));
+                }
+
+                // Remove from free list
+                if (prev === -1) {
+                    this.free_list = this.get_next(current);
+                } else {
+                    this.set_next(prev, this.get_next(current));
+                }
+
+                // Set the size before returning
+                this.set_size(current, size);
+                return current;
+            }
+
+            prev = current;
+            current = this.get_next(current);
+        }
+
+        throw new Error("Heap out of memory: No space available for allocation.");
+    }
+
+    // New deallocation method
+    public deallocate(address: number): void {
+        if (address < 0 || address >= Heap.HEAP_SIZE / Heap.WORD_SIZE) {
+            return; // Invalid address, silently ignore
+        }
+
+        const size = this.get_size(address);
+        this.set_tag(address, HeapTag.Free);
+
+        // Find insertion point in free list
+        let prev = -1;
+        let current = this.free_list;
+
+        while (current !== -1 && current < address) {
+            prev = current;
+            current = this.get_next(current);
+        }
+
+        // Insert into free list
+        if (prev === -1) {
+            this.free_list = address;
+        } else {
+            this.set_next(prev, address);
+        }
+        this.set_next(address, current);
+
+        // Try to merge with next block if adjacent
+        if (current !== -1 && address + size === current) {
+            this.set_size(address, size + this.get_size(current));
+            this.set_next(address, this.get_next(current));
+        }
+
+        // Try to merge with previous block if adjacent
+        if (prev !== -1 && prev + this.get_size(prev) === address) {
+            this.set_size(prev, this.get_size(prev) + size);
+            this.set_next(prev, this.get_next(address));
+        }
+    }
+
+    // Modified allocation method to use reserve
+    private allocate(tag: HeapTag, size: number): number {
+        const address = this.reserve(size, 0);
+        this.set_tag(address, tag);
         return address;
     }
 
@@ -110,7 +233,7 @@ export class Heap implements HeapInterface {
     // Environment methods
     ALLOCATING = [];
     public heap_Environment_extend(frame_address: number, env: number): number {
-        const old_size = this.heap_get_size(env);
+        const old_size = this.get_size(env);
         this.ALLOCATING = [...this.ALLOCATING, frame_address, env];
         const new_env = this.heap_allocate_Environment(old_size);
         this.ALLOCATING = [];
@@ -124,7 +247,7 @@ export class Heap implements HeapInterface {
 
     public display(): void {
         console.log("Heap contents:");
-        for (let i = 0; i < this.free; i++) {
+        for (let i = 0; i < this.free_list; i++) {
             const tag = this.heap_get_tag(i);
             const value = this.address_to_JS_value(i);
             console.log(`Address ${i}: ${HeapTag[tag]} = ${value}`);
@@ -145,7 +268,7 @@ export class Heap implements HeapInterface {
     private heap_get_number_of_children(address: number) {
         return this.heap_get_tag(address) === HeapTag.Number
             ? 0
-            : this.heap_get_size(address) - 1
+            : this.get_size(address) - 1
     }
 
     private heap_Frame_display(address: number) {
@@ -197,7 +320,7 @@ export class Heap implements HeapInterface {
         } else if (this.is_Closure(address)) {
             return "<closure>";
         } else if (this.is_Builtin(address)) {
-            return this.heap_get_Builtin_id(address)
+            return this.heap_get_byte_at_offset(address, 6)
         } else {
             return undefined;
         }
@@ -226,10 +349,6 @@ export class Heap implements HeapInterface {
 
     public heap_get_tag(address: number): HeapTag {
         return this.heap.getInt8(Heap.addressToBytes(address)) as HeapTag;
-    }
-
-    private heap_get_size(address: number) {
-        return this.heap.getUint16(Heap.addressToBytes(address) + this.size_offset);
     }
 
     public heap_get_child(address: number, childIndex: number): number {
