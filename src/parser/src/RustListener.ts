@@ -4,6 +4,8 @@ import { ErrorNode, ParseTreeListener, ParserRuleContext, TerminalNode } from "a
 
 
 import { LitContext } from "./RustParser.js";
+import { Mut_typeContext } from "./RustParser.js";
+import { NamContext } from "./RustParser.js";
 import { ProgContext } from "./RustParser.js";
 import { StmtContext } from "./RustParser.js";
 import { ExprContext } from "./RustParser.js";
@@ -41,6 +43,26 @@ export class RustListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitLit?: (ctx: LitContext) => void;
+    /**
+     * Enter a parse tree produced by `RustParser.mut_type`.
+     * @param ctx the parse tree
+     */
+    enterMut_type?: (ctx: Mut_typeContext) => void;
+    /**
+     * Exit a parse tree produced by `RustParser.mut_type`.
+     * @param ctx the parse tree
+     */
+    exitMut_type?: (ctx: Mut_typeContext) => void;
+    /**
+     * Enter a parse tree produced by `RustParser.nam`.
+     * @param ctx the parse tree
+     */
+    enterNam?: (ctx: NamContext) => void;
+    /**
+     * Exit a parse tree produced by `RustParser.nam`.
+     * @param ctx the parse tree
+     */
+    exitNam?: (ctx: NamContext) => void;
     /**
      * Enter a parse tree produced by `RustParser.prog`.
      * @param ctx the parse tree

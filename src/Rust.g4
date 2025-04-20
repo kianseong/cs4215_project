@@ -11,10 +11,13 @@ KW_FN : 'fn';
 KW_RETURN : 'return';
 KW_LET : 'let';
 KW_MUT : 'mut';
+KW_BORROW: '&';
 
 // lits
 
 lit: INT | BOOL;
+mut_type: KW_BORROW? KW_MUT? TYPE;
+nam: KW_BORROW? KW_MUT? IDENT;
 
 INT: [0-9]+;
 BOOL: 'true' | 'false';
@@ -45,7 +48,7 @@ expr
     | expr op=('*'|'/') expr
     | expr op=('+'|'-') expr
     | expr op=('==' | '!=' | '<' | '<=' | '>' | '>=') expr
-    | IDENT
+    | nam
     | lit
     ;
 
@@ -78,7 +81,7 @@ assignment_stmt: IDENT '=' expr ';';
 // functions
 
 param:
-    IDENT ':' TYPE;
+    IDENT ':' mut_type;
 
 param_list:
     param (',' param)* ','?;

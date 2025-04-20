@@ -41,10 +41,12 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
         if (ctx.lit() !== null) {
             return this.visit(ctx.lit())
         }
-        if (ctx.IDENT() !== null) {
+        if (ctx.nam() !== null) {
             return {
                 tag: "nam",
-                sym: ctx.IDENT().getText()
+                sym: ctx.nam().IDENT().getText(),
+                borrow: ctx.nam().KW_BORROW() !== null,
+                mut: ctx.nam().KW_MUT() !== null
             }
         }
         if (ctx.fn_call_expr() !== null) {
@@ -90,7 +92,6 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
             valueProducing = true
         } else {
             if (jsonStatements.length != 0 && jsonStatements[jsonStatements.length - 1].valueProducing === true) {
-                console.log("Here")
                 valueProducing = true
             }
         }
@@ -171,10 +172,21 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
     }
 
     visitParam(ctx: ParamContext): any {
+        let full_type = ctx.mut_type()
+        let mut = true
+        let borrowed = false
+        if (full_type.KW_BORROW() !== null && full_type.KW_MUT() === null) {
+            mut = false
+        }
+        if (full_type.KW_BORROW() !== null) {
+            borrowed = true
+        }
         return {
             tag: "taggedSym",
             sym: ctx.IDENT().getText(),
-            type: ctx.TYPE().getText()
+            type: ctx.mut_type().TYPE().getText(),
+            mut: mut,
+            borrowed: borrowed
         }
     }
 

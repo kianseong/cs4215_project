@@ -27,7 +27,6 @@ export class RustVirtualMachine {
         const builtins_frame = this.allocate_builtin_frame()
         const constants_frame = this.allocate_constant_frame()
         this.E = this.heap.heap_allocate_Environment(0)
-        console.log(`initial env size: ${this.heap.get_size(this.E)}`)
         this.E = this.heap.heap_Environment_extend(builtins_frame, this.E)
         this.E = this.heap.heap_Environment_extend(constants_frame, this.E)
     }
@@ -36,8 +35,6 @@ export class RustVirtualMachine {
         //print_code()
         this.initialize_machine()
         while (! (instrs[this.PC].tag === 'DONE')) {
-            console.log(instrs[this.PC])
-            console.log(this.OS)
             //heap_display()
             //display(PC, "PC: ")
             //display(instrs[PC].tag, "instr: ")

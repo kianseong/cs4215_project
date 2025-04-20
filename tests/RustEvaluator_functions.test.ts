@@ -17,7 +17,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing funct
         const throwError = () => rustEvaluator.evaluate(`
             let x: number = 1;
             fn simple() {
-                x = 2
+                x = 2;
             }
         `);
     

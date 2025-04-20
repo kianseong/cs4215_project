@@ -94,7 +94,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing that 
                 if (x > 0) {
                     x;
                 } else {
-                    -2;
+                    2;
                 }
             }
             testfunction(5)

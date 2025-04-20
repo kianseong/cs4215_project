@@ -4,6 +4,8 @@ import { AbstractParseTreeVisitor } from "antlr4ng";
 
 
 import { LitContext } from "./RustParser.js";
+import { Mut_typeContext } from "./RustParser.js";
+import { NamContext } from "./RustParser.js";
 import { ProgContext } from "./RustParser.js";
 import { StmtContext } from "./RustParser.js";
 import { ExprContext } from "./RustParser.js";
@@ -40,6 +42,18 @@ export class RustVisitor<Result> extends AbstractParseTreeVisitor<Result> {
      * @return the visitor result
      */
     visitLit?: (ctx: LitContext) => Result;
+    /**
+     * Visit a parse tree produced by `RustParser.mut_type`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitMut_type?: (ctx: Mut_typeContext) => Result;
+    /**
+     * Visit a parse tree produced by `RustParser.nam`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitNam?: (ctx: NamContext) => Result;
     /**
      * Visit a parse tree produced by `RustParser.prog`.
      * @param ctx the parse tree
