@@ -79,7 +79,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing if el
 
     const result = rustEvaluator.evaluate(`
         if (1+3==10) {
-            8
+            8;
         } else {
             10;
         }

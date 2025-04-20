@@ -31,6 +31,7 @@ export class RustCompiler {
         }
         if (!value_producing) {
             this.instrs[this.wc++] = {tag: 'POP'}
+            this.instrs[this.wc++] = {tag: "LDC", val: undefined}
         }
     }
 
@@ -73,6 +74,8 @@ export class RustCompiler {
             jump_on_false_instruction.addr = alternative_address;
             if (comp.alt !== undefined) {
                 this.compile(comp.alt, ce)
+            } else {
+                this.instrs[this.wc++] = {tag: "LDC", val: undefined}
             }
             goto_instruction.addr = this.wc
         },

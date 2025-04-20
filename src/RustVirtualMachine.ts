@@ -37,6 +37,7 @@ export class RustVirtualMachine {
         this.initialize_machine()
         while (! (instrs[this.PC].tag === 'DONE')) {
             console.log(instrs[this.PC])
+            console.log(this.OS)
             //heap_display()
             //display(PC, "PC: ")
             //display(instrs[PC].tag, "instr: ")
@@ -67,6 +68,8 @@ export class RustVirtualMachine {
 
     // v2 is popped before v1
     private apply_binop(op: string, v2: number, v1: number): number {
+        console.log(this.heap.address_to_JS_value(v1))
+        console.log(this.heap.address_to_JS_value(v2))
         return this.heap.JS_value_to_address(RustVirtualMachine.binop_microcode[op]
             (this.heap.address_to_JS_value(v1),
             this.heap.address_to_JS_value(v2)))

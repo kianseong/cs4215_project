@@ -123,16 +123,20 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
     }
 
     visitIf_expr(ctx: If_exprContext): any {
+        let ifJson = this.visit(ctx.block())
         let elseBlock = ctx.else_expr()
         let elseJson = undefined
         if (elseBlock !== null) {
             elseJson = this.visit(elseBlock).alt
+            if (ifJson.valueProducing !== elseJson.valueProducing) {
+                throw new Error("cons and alt of conditional has to be both value producing or not")
+            }
         }
         return {
             tag: "cond",
             pred: this.visit(ctx.expr()),
-            cons: this.visit(ctx.block()),
-            alt: elseJson
+            cons: ifJson,
+            alt: elseJson,
         }
     }
 
