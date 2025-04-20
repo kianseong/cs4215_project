@@ -242,6 +242,15 @@ export class RustVirtualMachine {
             const array = this.OS.pop()
             const element = this.heap.heap_get_Array_element(array, index)
             this.OS.push(element)
+        },
+    ARRAY_MOD:
+        instr => {
+            const element = this.OS.pop()
+            const index = this.heap.address_to_JS_value(this.OS.pop())
+            const array = this.OS.pop()
+            
+            this.heap.heap_set_Array_element(array, index, element)
+            this.OS.push(array)
         }
-      }
+    }
 }

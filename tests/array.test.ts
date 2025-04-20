@@ -20,7 +20,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing array
     expect(result).toEqual([1, 2, 3, 4, 5]);
   });
 
-  test('array indexing', () => {
+  test('array indexing, value producing', () => {
     const rustEvaluator = new RustEvaluator(mockConductor);
 
     const result = rustEvaluator.evaluate(`
@@ -29,6 +29,17 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing array
     `);
 
     expect(result).toBe(20);
+  });
+
+  test('array indexing, non-value producing', () => {
+    const rustEvaluator = new RustEvaluator(mockConductor);
+
+    const result = rustEvaluator.evaluate(`
+      let arr = [10, 20, 30, 40];
+      arr[2];
+    `);
+
+    expect(result).toBe(undefined);
   });
 
   // test('array length', () => {
@@ -57,7 +68,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing array
   //   expect(result).toBe(6);
   // });
 
-  test('array modification', () => {
+  test('array modification, value producing', () => {
     const rustEvaluator = new RustEvaluator(mockConductor);
 
     const result = rustEvaluator.evaluate(`
@@ -67,6 +78,18 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing array
     `);
 
     expect(result).toEqual([1, 20, 3]);
+  });
+
+  test('array modification, non-value producing', () => {
+    const rustEvaluator = new RustEvaluator(mockConductor);
+
+    const result = rustEvaluator.evaluate(`
+      let mut arr = [1, 2, 3];
+      arr[1] = 30;
+      arr;
+    `);
+
+    expect(result).toEqual(undefined);
   });
 
   // test('array slice', () => {
@@ -103,25 +126,25 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing array
   //   expect(result).toEqual([1, "two", true]);
   // });
 
-  // test('empty array', () => {
-  //   const rustEvaluator = new RustEvaluator(mockConductor);
+  test('empty array', () => {
+    const rustEvaluator = new RustEvaluator(mockConductor);
 
-  //   const result = rustEvaluator.evaluate(`
-  //     let arr: [i32; 0] = [];
-  //     arr
-  //   `);
+    const result = rustEvaluator.evaluate(`
+      let arr = [];
+      arr
+    `);
 
-  //   expect(result).toEqual([]);
-  // });
+    expect(result).toEqual([]);
+  });
 
-  // test('array with repeated values', () => {
-  //   const rustEvaluator = new RustEvaluator(mockConductor);
+  test('array with repeated values', () => {
+    const rustEvaluator = new RustEvaluator(mockConductor);
 
-  //   const result = rustEvaluator.evaluate(`
-  //     let arr = [0; 5];
-  //     arr
-  //   `);
+    const result = rustEvaluator.evaluate(`
+      let arr = [0, 0, 0, 0, 0];
+      arr
+    `);
 
-  //   expect(result).toEqual([0, 0, 0, 0, 0]);
-  // });
+    expect(result).toEqual([0, 0, 0, 0, 0]);
+  });
 });

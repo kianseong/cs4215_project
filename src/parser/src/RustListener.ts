@@ -16,8 +16,9 @@ import { Continue_stmtContext } from "./RustParser.js";
 import { If_exprContext } from "./RustParser.js";
 import { Else_exprContext } from "./RustParser.js";
 import { Array_literalContext } from "./RustParser.js";
-import { Array_index_exprContext } from "./RustParser.js";
 import { Array_declaration_stmtContext } from "./RustParser.js";
+import { Array_index_exprContext } from "./RustParser.js";
+import { Array_modification_exprContext } from "./RustParser.js";
 import { Declaration_stmtContext } from "./RustParser.js";
 import { Assignment_stmtContext } from "./RustParser.js";
 import { ParamContext } from "./RustParser.js";
@@ -165,6 +166,16 @@ export class RustListener implements ParseTreeListener {
      */
     exitArray_literal?: (ctx: Array_literalContext) => void;
     /**
+     * Enter a parse tree produced by `RustParser.array_declaration_stmt`.
+     * @param ctx the parse tree
+     */
+    enterArray_declaration_stmt?: (ctx: Array_declaration_stmtContext) => void;
+    /**
+     * Exit a parse tree produced by `RustParser.array_declaration_stmt`.
+     * @param ctx the parse tree
+     */
+    exitArray_declaration_stmt?: (ctx: Array_declaration_stmtContext) => void;
+    /**
      * Enter a parse tree produced by `RustParser.array_index_expr`.
      * @param ctx the parse tree
      */
@@ -175,15 +186,15 @@ export class RustListener implements ParseTreeListener {
      */
     exitArray_index_expr?: (ctx: Array_index_exprContext) => void;
     /**
-     * Enter a parse tree produced by `RustParser.array_declaration_stmt`.
+     * Enter a parse tree produced by `RustParser.array_modification_expr`.
      * @param ctx the parse tree
      */
-    enterArray_declaration_stmt?: (ctx: Array_declaration_stmtContext) => void;
+    enterArray_modification_expr?: (ctx: Array_modification_exprContext) => void;
     /**
-     * Exit a parse tree produced by `RustParser.array_declaration_stmt`.
+     * Exit a parse tree produced by `RustParser.array_modification_expr`.
      * @param ctx the parse tree
      */
-    exitArray_declaration_stmt?: (ctx: Array_declaration_stmtContext) => void;
+    exitArray_modification_expr?: (ctx: Array_modification_exprContext) => void;
     /**
      * Enter a parse tree produced by `RustParser.declaration_stmt`.
      * @param ctx the parse tree

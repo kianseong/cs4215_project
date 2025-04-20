@@ -1,5 +1,5 @@
 import { AbstractParseTreeVisitor } from 'antlr4ng';
-import { ParamContext, StmtContext, ExprContext, ProgContext, LitContext, Return_stmtContext, Argument_listContext, Fn_call_exprContext, Fn_decl_stmtContext, Return_typeContext, Param_listContext, Assignment_stmtContext, Declaration_stmtContext, Break_stmtContext, Continue_stmtContext, If_exprContext, Else_exprContext, While_stmtContext, Expr_stmtContext, BlockContext, Empty_stmtContext, Array_declaration_stmtContext, Array_index_exprContext } from './parser/src/RustParser';
+import { ParamContext, StmtContext, ExprContext, ProgContext, LitContext, Return_stmtContext, Argument_listContext, Fn_call_exprContext, Fn_decl_stmtContext, Return_typeContext, Param_listContext, Assignment_stmtContext, Declaration_stmtContext, Break_stmtContext, Continue_stmtContext, If_exprContext, Else_exprContext, While_stmtContext, Expr_stmtContext, BlockContext, Empty_stmtContext, Array_declaration_stmtContext, Array_index_exprContext, Array_modification_exprContext } from './parser/src/RustParser';
 import { RustVisitor } from './parser/src/RustVisitor';
 
 export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements RustVisitor<any> {
@@ -284,6 +284,15 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
             tag: "arr_index",
             arr: ctx.IDENT().getText(),
             index: this.visit(ctx.expr())
+        }
+    }
+
+    visitArray_modification_expr(ctx: Array_modification_exprContext): any {
+        return {
+            tag: "arr_mod",
+            arr: ctx.IDENT().getText(),
+            index: this.visit(ctx.expr(0)),
+            expr: this.visit(ctx.expr(1))
         }
     }
 

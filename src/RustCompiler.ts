@@ -189,6 +189,13 @@ export class RustCompiler {
             this.compile(comp.index, ce)
             this.instrs[this.wc++] = {tag: 'ARRAY_INDEX' }
         },
+    arr_mod:
+        (comp, ce) => {
+            this.compile({tag: 'nam', sym: comp.arr}, ce)
+            this.compile(comp.index, ce)
+            this.compile(comp.expr, ce)
+            this.instrs[this.wc++] = {tag: 'ARRAY_MOD' }
+        }
     }
 
     // compile component into instruction array instrs,
