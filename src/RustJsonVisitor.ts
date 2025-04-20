@@ -88,6 +88,11 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
         if (valueExpr !== null) {
             jsonStatements.push(this.visit(valueExpr))
             valueProducing = true
+        } else {
+            if (jsonStatements.length != 0 && jsonStatements[jsonStatements.length - 1].valueProducing === true) {
+                console.log("Here")
+                valueProducing = true
+            }
         }
         return {
             tag: "block",
@@ -123,16 +128,20 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
     }
 
     visitIf_expr(ctx: If_exprContext): any {
+        let ifJson = this.visit(ctx.block())
         let elseBlock = ctx.else_expr()
         let elseJson = undefined
         if (elseBlock !== null) {
             elseJson = this.visit(elseBlock).alt
+            if (ifJson.valueProducing !== elseJson.valueProducing) {
+                throw new Error("cons and alt of conditional has to be both value producing or not")
+            }
         }
         return {
             tag: "cond",
             pred: this.visit(ctx.expr()),
-            cons: this.visit(ctx.block()),
-            alt: elseJson
+            cons: ifJson,
+            alt: elseJson,
         }
     }
 
