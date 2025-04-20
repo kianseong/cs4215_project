@@ -75,10 +75,10 @@ describe('Function Tests', () => {
                 };
                 return false;
             }
-            check_positive(5);
+            check_positive(5)
         `);
 
-        expect(result).toBe(false);
+        expect(result).toBe(true);
     });
 
     test('nested function calls, value producing', () => {
@@ -103,7 +103,7 @@ describe('Function Tests', () => {
                 };
                 return n * factorial(n - 1);
             }
-            factorial(5);
+            factorial(5)
         `);
 
         expect(result).toBe(120);
@@ -147,6 +147,14 @@ describe('Function Tests', () => {
         `);
 
         expect(result).toBe(0);
+    });
+
+    test('apply builtin', () => {
+        const result = rustEvaluator.evaluate(`
+            is_null(1)
+        `);
+
+        expect(result).toBe(false);
     });
 
 

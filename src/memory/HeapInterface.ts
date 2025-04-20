@@ -4,9 +4,11 @@ export interface HeapInterface {
 
     Unassigned: number
 
-    display(): void
+    display(): void    
 
     initialise_empty_heap(): HeapInterface
+
+    get_size(address: number): number
 
     heap_allocate_Pair(head: number, tail: number): number
 

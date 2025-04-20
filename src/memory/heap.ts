@@ -283,17 +283,13 @@ export class Heap implements HeapInterface {
     }
 
     public heap_get_Environment_value(env: number, index: number): number {
-        const frame_index = this.heap_get_child(index, 0);
-        const value_index = this.heap_get_child(index, 1);
-        const frame_address = this.heap_get_child(env, frame_index);
-        return this.heap_get_child(frame_address, value_index);
+        const frame_address = this.heap_get_child(env, index[0]+1);
+        return this.heap_get_child(frame_address, index[1]);
     }
 
     public heap_set_Environment_value(env: number, index: number, val: number) {
-        const frame_index = this.heap_get_child(index, 0);
-        const value_index = this.heap_get_child(index, 1);
-        const frame_address = this.heap_get_child(env, frame_index);
-        this.heap_set_child(frame_address, value_index, val);
+        const frame_address = this.heap_get_child(env, index[0]+1);
+        this.heap_set_child(frame_address, index[1], val);
     }
 
     public heap_get_Blockframe_environment(address: number): number {

@@ -173,7 +173,6 @@ export class RustCompiler {
     // compile component into instruction array instrs,
     // starting at wc (write counter)
     compile(comp: any, ce: string[][]): any[] {
-        console.log(comp)
         this.compile_comp[comp.tag](comp, ce)
         return this.instrs
     }

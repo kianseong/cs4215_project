@@ -16,7 +16,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing basic
         math_PI
     `);
 
-    expect(result).toBe(Math.PI.toString());
+    expect(result).toBe(Math.PI);
   });
 
   test('variable declaration', () => {

@@ -27,15 +27,16 @@ export class RustVirtualMachine {
         const builtins_frame = this.allocate_builtin_frame()
         const constants_frame = this.allocate_constant_frame()
         this.E = this.heap.heap_allocate_Environment(0)
+        console.log(`initial env size: ${this.heap.get_size(this.E)}`)
         this.E = this.heap.heap_Environment_extend(builtins_frame, this.E)
         this.E = this.heap.heap_Environment_extend(constants_frame, this.E)
     }
 
     run(instrs: any[]) {
-        console.log(instrs)
         //print_code()
         this.initialize_machine()
         while (! (instrs[this.PC].tag === 'DONE')) {
+            console.log(instrs[this.PC])
             //heap_display()
             //display(PC, "PC: ")
             //display(instrs[PC].tag, "instr: ")
@@ -47,7 +48,6 @@ export class RustVirtualMachine {
         }
         //display(OS, "\nfinal operands:           ")
         //print_OS()
-        console.log(this.OS)
         return this.heap.address_to_JS_value(this.OS[0])
     }
 
@@ -67,7 +67,6 @@ export class RustVirtualMachine {
 
     // v2 is popped before v1
     private apply_binop(op: string, v2: number, v1: number): number {
-        console.log(this.heap.address_to_JS_value(v2))
         return this.heap.JS_value_to_address(RustVirtualMachine.binop_microcode[op]
             (this.heap.address_to_JS_value(v1),
             this.heap.address_to_JS_value(v2)))
@@ -84,7 +83,7 @@ export class RustVirtualMachine {
     }
 
     private apply_builtin(builtin_id: number) {
-        console.log(builtin_id, "apply_builtin: builtin_id:")
+        console.log(`apply_builtin: ${builtin_id}`)
         const result: any = RustCompileTimeEnvironment.builtin_array[builtin_id](this.OS, this.heap)
         this.OS.pop() // pop fun
         this.OS.push(result)
@@ -159,8 +158,6 @@ export class RustVirtualMachine {
             this.E = this.heap.heap_get_Blockframe_environment(this.RTS.pop()),
     LD:
         instr => {
-            console.log(this.heap.heap_get_Environment_value(this.E, instr.pos))
-            console.log(instr.pos)
             const val = this.heap.heap_get_Environment_value(this.E, instr.pos)
             if (this.heap.is_Unassigned(val))
                 throw new Error("access of unassigned variable")
@@ -189,7 +186,8 @@ export class RustVirtualMachine {
             const new_PC = this.heap.heap_get_Closure_pc(fun)
             const new_frame = this.heap.heap_allocate_Frame(arity)
             for (let i = arity - 1; i >= 0; i--) {
-                this.heap.heap_set_child(new_frame, i, this.OS.pop())
+                let val = this.OS.pop()
+                this.heap.heap_set_child(new_frame, i, val)
             }
             this.OS.pop() // pop fun
             this.RTS.push(this.heap.heap_allocate_Callframe(this.E, this.PC))
