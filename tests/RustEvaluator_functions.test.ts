@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach } from 'vitest';
 import { RustEvaluator } from '../src/RustEvaluator';
 import type { IRunnerPlugin } from 'conductor/dist/conductor/runner/types';
 
-describe('Function Tests', () => {
+describe('Test RustEvaluator with full Rust programs - focusing on testing functions', () => {
     let mockConductor: IRunnerPlugin;
     let rustEvaluator: RustEvaluator;
 
@@ -10,6 +10,32 @@ describe('Function Tests', () => {
         mockConductor = {} as IRunnerPlugin;
         rustEvaluator = new RustEvaluator(mockConductor);
     });
+
+    test('function should not be able to read variables declared outside', () => {
+        const rustEvaluator = new RustEvaluator(mockConductor);
+    
+        const throwError = () => rustEvaluator.evaluate(`
+            let x: number = 1;
+            fn simple() {
+                x = 2
+            }
+        `);
+    
+        expect(throwError).toThrow('Variable x has not been declared');
+      });
+
+      test('function should not be able to read variables declared outside', () => {
+        const rustEvaluator = new RustEvaluator(mockConductor);
+    
+        const throwError = () => rustEvaluator.evaluate(`
+            let x: number = 1;
+            fn simple() {
+                x
+            }
+        `);
+    
+        expect(throwError).toThrow('Variable x has not been declared');
+      });
 
     test('function with no arguments no return value', () => {
         const result = rustEvaluator.evaluate(`
@@ -136,17 +162,15 @@ describe('Function Tests', () => {
 
     test('testing function early return nothing', () => {
         const result = rustEvaluator.evaluate(`
-            let x: number = 0;
             fn earlyReturn() {
                 1 + 1;
                 return;
-                x = 2;
+                2 + 2
             }
             earlyReturn();
-            x
         `);
 
-        expect(result).toBe(0);
+        expect(result).toBe(undefined);
     });
 
     test('apply builtin', () => {

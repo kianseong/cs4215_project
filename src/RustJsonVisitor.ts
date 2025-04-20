@@ -223,7 +223,9 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
             sym: ctx.IDENT().getText(),
             retType: returnType,
             prms: paramList,
-            body: this.visit(ctx.block())
+            body: this.visit(ctx.block()),
+            type: "function",
+            mut: false
         }
     }
 
