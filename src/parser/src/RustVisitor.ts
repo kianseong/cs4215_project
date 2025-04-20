@@ -15,6 +15,8 @@ import { Break_stmtContext } from "./RustParser.js";
 import { Continue_stmtContext } from "./RustParser.js";
 import { If_exprContext } from "./RustParser.js";
 import { Else_exprContext } from "./RustParser.js";
+import { Array_literalContext } from "./RustParser.js";
+import { Array_declaration_stmtContext } from "./RustParser.js";
 import { Declaration_stmtContext } from "./RustParser.js";
 import { Assignment_stmtContext } from "./RustParser.js";
 import { ParamContext } from "./RustParser.js";
@@ -106,6 +108,18 @@ export class RustVisitor<Result> extends AbstractParseTreeVisitor<Result> {
      * @return the visitor result
      */
     visitElse_expr?: (ctx: Else_exprContext) => Result;
+    /**
+     * Visit a parse tree produced by `RustParser.array_literal`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitArray_literal?: (ctx: Array_literalContext) => Result;
+    /**
+     * Visit a parse tree produced by `RustParser.array_declaration_stmt`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitArray_declaration_stmt?: (ctx: Array_declaration_stmtContext) => Result;
     /**
      * Visit a parse tree produced by `RustParser.declaration_stmt`.
      * @param ctx the parse tree

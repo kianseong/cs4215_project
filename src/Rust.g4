@@ -30,6 +30,7 @@ stmt
     | block
     | assignment_stmt
     | declaration_stmt
+    | array_declaration_stmt
     | return_stmt
     | expr_stmt
     | break_stmt
@@ -67,6 +68,10 @@ if_expr: KW_IF expr block else_expr?;
 
 else_expr: KW_ELSE block;
 
+// array
+array_literal: '[' expr (',' expr)* ','? ']';
+
+array_declaration_stmt: KW_LET KW_MUT? IDENT '=' array_literal;
 
 // variables
 
@@ -94,7 +99,6 @@ fn_call_expr: IDENT '(' argument_list? ')';
 argument_list: expr (',' expr)*?;
 
 return_stmt: KW_RETURN expr? ';';
-
 
 // ignored
 WS: [ \t\r\n]+ -> skip;

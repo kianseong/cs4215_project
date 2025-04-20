@@ -15,6 +15,8 @@ import { Break_stmtContext } from "./RustParser.js";
 import { Continue_stmtContext } from "./RustParser.js";
 import { If_exprContext } from "./RustParser.js";
 import { Else_exprContext } from "./RustParser.js";
+import { Array_literalContext } from "./RustParser.js";
+import { Array_declaration_stmtContext } from "./RustParser.js";
 import { Declaration_stmtContext } from "./RustParser.js";
 import { Assignment_stmtContext } from "./RustParser.js";
 import { ParamContext } from "./RustParser.js";
@@ -151,6 +153,26 @@ export class RustListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitElse_expr?: (ctx: Else_exprContext) => void;
+    /**
+     * Enter a parse tree produced by `RustParser.array_literal`.
+     * @param ctx the parse tree
+     */
+    enterArray_literal?: (ctx: Array_literalContext) => void;
+    /**
+     * Exit a parse tree produced by `RustParser.array_literal`.
+     * @param ctx the parse tree
+     */
+    exitArray_literal?: (ctx: Array_literalContext) => void;
+    /**
+     * Enter a parse tree produced by `RustParser.array_declaration_stmt`.
+     * @param ctx the parse tree
+     */
+    enterArray_declaration_stmt?: (ctx: Array_declaration_stmtContext) => void;
+    /**
+     * Exit a parse tree produced by `RustParser.array_declaration_stmt`.
+     * @param ctx the parse tree
+     */
+    exitArray_declaration_stmt?: (ctx: Array_declaration_stmtContext) => void;
     /**
      * Enter a parse tree produced by `RustParser.declaration_stmt`.
      * @param ctx the parse tree
