@@ -129,9 +129,17 @@ export class RustCompiler {
             for (let prm of comp.prms) {
                 new_cv_frame[prm.sym] = {mut: true, type: prm.type, can_read: true, can_write: true}
             }
-            this.compile(comp.body,
-                RustCompileTimeEnvironment.compile_time_environment_extend(
-                        comp.prms.map(prm => prm.sym), ce), RustCompileTimeEnvironment.compile_time_variable_properties_extend(new_cv_frame, cv))
+            let new_cv = [...cv]
+            console.log(new_cv)
+            let new_env = [...ce]
+            for (let i = 2; i < new_cv.length; i++) {
+                new_cv[i] = Object.fromEntries(Object.entries(new_cv[i]).filter(([var_name, var_properties]) => (var_properties as { type: string }).type === "function"))
+                new_env[i] = new_env[i].filter(var_name => var_name in new_cv[i])
+            }
+            new_cv = RustCompileTimeEnvironment.compile_time_variable_properties_extend(new_cv_frame, cv)
+            new_env = RustCompileTimeEnvironment.compile_time_environment_extend(
+                comp.prms.map(prm => prm.sym), new_env)
+            this.compile(comp.body, new_env, new_cv)
             if (!comp.body.valueProducing) {
                 this.instrs[this.wc++] = {tag: 'LDC', val: undefined}
             }
