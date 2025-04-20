@@ -12,6 +12,10 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
         if (valueExpr !== null) {
             jsonStatements.push(this.visit(valueExpr))
             valueProducing = true
+        } else {
+            if (jsonStatements.length != 0 && jsonStatements[jsonStatements.length - 1].valueProducing === true) {
+                valueProducing = true
+            }
         }
         return {
             tag: "block",
@@ -97,10 +101,12 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
     }
 
     visitWhile_stmt(ctx: While_stmtContext): any {
+        let body = this.visit(ctx.block())
         return {
             tag: "while",
             pred: this.visit(ctx.expr()),
-            body: this.visit(ctx.block())
+            body: body,
+            valueProducing: body.valueProducing
         }
     }
 

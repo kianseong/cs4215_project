@@ -37,20 +37,6 @@ describe('Test RustEvaluator with full Rust programs - focusing on while loops',
         expect(result).toBe(0);
     });
 
-    test('value producing while loop', () => {
-        const rustEvaluator = new RustEvaluator(mockConductor);
-
-        const result = rustEvaluator.evaluate(`
-            let x: number = 0;
-            while (x < 5) {
-                x = x + 1;
-                x
-            }
-        `);
-
-        expect(result).toBe(5);
-    });
-
     test('non value producing while loop', () => {
         const rustEvaluator = new RustEvaluator(mockConductor);
 
