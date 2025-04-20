@@ -119,7 +119,9 @@ export class RustCompiler {
             this.compile(comp.body,
                 RustCompileTimeEnvironment.compile_time_environment_extend(
                         comp.prms.map(prm => prm.sym), ce))
-            this.instrs[this.wc++] = {tag: 'LDC', val: undefined}
+            if (!comp.body.valueProducing) {
+                this.instrs[this.wc++] = {tag: 'LDC', val: undefined}
+            }
             this.instrs[this.wc++] = {tag: 'RESET'}
             goto_instruction.addr = this.wc;
         },

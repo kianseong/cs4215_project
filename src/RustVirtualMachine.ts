@@ -49,7 +49,7 @@ export class RustVirtualMachine {
         }
         //display(OS, "\nfinal operands:           ")
         //print_OS()
-        return this.heap.address_to_JS_value(this.OS[0])
+        return this.heap.address_to_JS_value(this.OS.at(-1))
     }
 
     private static readonly binop_microcode: { [key: string]: any } = {
@@ -68,8 +68,6 @@ export class RustVirtualMachine {
 
     // v2 is popped before v1
     private apply_binop(op: string, v2: number, v1: number): number {
-        console.log(this.heap.address_to_JS_value(v1))
-        console.log(this.heap.address_to_JS_value(v2))
         return this.heap.JS_value_to_address(RustVirtualMachine.binop_microcode[op]
             (this.heap.address_to_JS_value(v1),
             this.heap.address_to_JS_value(v2)))
@@ -168,10 +166,10 @@ export class RustVirtualMachine {
         },
     ASSIGN:
         instr =>
-            this.heap.heap_set_Environment_value(this.E, instr.pos, this.OS[0]),
+            this.heap.heap_set_Environment_value(this.E, instr.pos, this.OS.at(-1)),
     LET:
         instr =>
-            this.heap.heap_set_Environment_value(this.E, instr.pos, this.OS[0]),
+            this.heap.heap_set_Environment_value(this.E, instr.pos, this.OS.at(-1)),
     LDF:
         instr => {
             const closure_address =
@@ -202,7 +200,7 @@ export class RustVirtualMachine {
     TAIL_CALL:
         instr => {
             const arity = instr.arity
-            const fun = this.OS[arity]
+            const fun = this.OS[this.OS.length - 1 - arity]
             if (this.heap.is_Builtin(fun)) {
                 return this.apply_builtin(this.heap.heap_get_Builtin_id(fun))
             }

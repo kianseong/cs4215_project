@@ -88,6 +88,11 @@ export class RustJsonVisitor extends AbstractParseTreeVisitor<any> implements Ru
         if (valueExpr !== null) {
             jsonStatements.push(this.visit(valueExpr))
             valueProducing = true
+        } else {
+            if (jsonStatements.length != 0 && jsonStatements[jsonStatements.length - 1].valueProducing === true) {
+                console.log("Here")
+                valueProducing = true
+            }
         }
         return {
             tag: "block",
