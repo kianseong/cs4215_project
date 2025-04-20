@@ -16,6 +16,7 @@ import { Continue_stmtContext } from "./RustParser.js";
 import { If_exprContext } from "./RustParser.js";
 import { Else_exprContext } from "./RustParser.js";
 import { Array_literalContext } from "./RustParser.js";
+import { Array_index_exprContext } from "./RustParser.js";
 import { Array_declaration_stmtContext } from "./RustParser.js";
 import { Declaration_stmtContext } from "./RustParser.js";
 import { Assignment_stmtContext } from "./RustParser.js";
@@ -163,6 +164,16 @@ export class RustListener implements ParseTreeListener {
      * @param ctx the parse tree
      */
     exitArray_literal?: (ctx: Array_literalContext) => void;
+    /**
+     * Enter a parse tree produced by `RustParser.array_index_expr`.
+     * @param ctx the parse tree
+     */
+    enterArray_index_expr?: (ctx: Array_index_exprContext) => void;
+    /**
+     * Exit a parse tree produced by `RustParser.array_index_expr`.
+     * @param ctx the parse tree
+     */
+    exitArray_index_expr?: (ctx: Array_index_exprContext) => void;
     /**
      * Enter a parse tree produced by `RustParser.array_declaration_stmt`.
      * @param ctx the parse tree

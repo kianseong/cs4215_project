@@ -13,6 +13,7 @@ export class RustCompiler {
     scan_for_locals(comps: any[]): string[] {
         let locals = []
         for (let comp of comps) {
+          console.log(comp)
             if (['let', 'fun'].includes(comp.tag)) {
                 locals.push(comp.sym)
             }
@@ -181,7 +182,13 @@ export class RustCompiler {
             }
             // Create array with the compiled elements
             this.instrs[this.wc++] = {tag: 'ARRAY', size: comp.elems.length}
-        }
+        },
+    arr_index:
+        (comp, ce) => {
+            this.compile({tag: 'nam', sym: comp.arr}, ce)
+            this.compile(comp.index, ce)
+            this.instrs[this.wc++] = {tag: 'ARRAY_INDEX' }
+        },
     }
 
     // compile component into instruction array instrs,

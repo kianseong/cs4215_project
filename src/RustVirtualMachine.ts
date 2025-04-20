@@ -36,8 +36,6 @@ export class RustVirtualMachine {
         //print_code()
         this.initialize_machine()
         while (! (instrs[this.PC].tag === 'DONE')) {
-            console.log(instrs[this.PC])
-            console.log(this.OS)
             //heap_display()
             //display(PC, "PC: ")
             //display(instrs[PC].tag, "instr: ")
@@ -237,7 +235,13 @@ export class RustVirtualMachine {
                 this.heap.heap_set_Array_element(array_address, i, this.OS.pop())
             }
             this.OS.push(array_address)
+        },
+    ARRAY_INDEX:
+        instr => {
+            const index = this.heap.address_to_JS_value(this.OS.pop())
+            const array = this.OS.pop()
+            const element = this.heap.heap_get_Array_element(array, index)
+            this.OS.push(element)
         }
-    }
-
+      }
 }

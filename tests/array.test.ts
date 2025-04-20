@@ -20,16 +20,16 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing array
     expect(result).toEqual([1, 2, 3, 4, 5]);
   });
 
-  // test('array indexing', () => {
-  //   const rustEvaluator = new RustEvaluator(mockConductor);
+  test('array indexing', () => {
+    const rustEvaluator = new RustEvaluator(mockConductor);
 
-  //   const result = rustEvaluator.evaluate(`
-  //     let arr = [10, 20, 30];
-  //     arr[1]
-  //   `);
+    const result = rustEvaluator.evaluate(`
+      let arr = [10, 20, 30];
+      arr[1]
+    `);
 
-  //   expect(result).toBe(20);
-  // });
+    expect(result).toBe(20);
+  });
 
   // test('array length', () => {
   //   const rustEvaluator = new RustEvaluator(mockConductor);
@@ -57,17 +57,17 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing array
   //   expect(result).toBe(6);
   // });
 
-  // test('array modification', () => {
-  //   const rustEvaluator = new RustEvaluator(mockConductor);
+  test('array modification', () => {
+    const rustEvaluator = new RustEvaluator(mockConductor);
 
-  //   const result = rustEvaluator.evaluate(`
-  //     let mut arr = [1, 2, 3];
-  //     arr[1] = 20;
-  //     arr
-  //   `);
+    const result = rustEvaluator.evaluate(`
+      let mut arr = [1, 2, 3];
+      arr[1] = 20;
+      arr
+    `);
 
-  //   expect(result).toEqual([1, 20, 3]);
-  // });
+    expect(result).toEqual([1, 20, 3]);
+  });
 
   // test('array slice', () => {
   //   const rustEvaluator = new RustEvaluator(mockConductor);

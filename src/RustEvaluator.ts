@@ -32,10 +32,11 @@ export class RustEvaluator extends BasicEvaluator {
 
         // Evaluate the parsed tree
         const jsonProgram = this.visitor.visit(tree);
+        console.log(jsonProgram)
 
         // Compile json program
         const compiledProgram = this.compiler.compile_program(jsonProgram)
-        console.log(compiledProgram)
+        // console.log(compiledProgram)
 
         // run VM and get result
         this.machine.initialize_machine()

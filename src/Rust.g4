@@ -41,6 +41,7 @@ stmt
 expr
     : if_expr
     | fn_call_expr
+    | array_index_expr
     | '(' expr ')'
     | op=('!'|'-unary') expr
     | expr op=('*'|'/') expr
@@ -70,6 +71,8 @@ else_expr: KW_ELSE block;
 
 // array
 array_literal: '[' expr (',' expr)* ','? ']';
+
+array_index_expr: IDENT '[' expr ']';
 
 array_declaration_stmt: KW_LET KW_MUT? IDENT '=' array_literal;
 
