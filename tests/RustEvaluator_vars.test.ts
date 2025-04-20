@@ -82,4 +82,17 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing basic
     expect(result).toBe(22);
   });
 
+  test('Testing variable location', () => {
+    const rustEvaluator = new RustEvaluator(mockConductor);
+
+    const result = rustEvaluator.evaluate(`
+        let y: number = 4;
+        let x: number = 5;
+        x;
+        y
+    `);
+
+    expect(result).toBe(4);
+  });
+
 });

@@ -115,7 +115,7 @@ export class RustCompiler {
             // extend compile-time environment
             this.compile(comp.body,
                 RustCompileTimeEnvironment.compile_time_environment_extend(
-                        comp.prms, ce))
+                        comp.prms.map(prm => prm.sym), ce))
             this.instrs[this.wc++] = {tag: 'LDC', val: undefined}
             this.instrs[this.wc++] = {tag: 'RESET'}
             goto_instruction.addr = this.wc;
@@ -141,6 +141,10 @@ export class RustCompiler {
         },
     ret:
         (comp, ce) => {
+            if (comp.expr === null) {
+                this.instrs[this.wc++] = {tag: 'RESET'}
+                return
+            }
             this.compile(comp.expr, ce)
             if (comp.expr.tag === 'app') {
                 // tail call: turn CALL into TAILCALL
@@ -169,6 +173,7 @@ export class RustCompiler {
     // compile component into instruction array instrs,
     // starting at wc (write counter)
     compile(comp: any, ce: string[][]): any[] {
+        console.log(comp)
         this.compile_comp[comp.tag](comp, ce)
         return this.instrs
     }

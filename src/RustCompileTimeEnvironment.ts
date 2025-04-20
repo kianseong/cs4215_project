@@ -57,7 +57,9 @@ export class RustCompileTimeEnvironment {
 
     static compile_time_environment_position(env: string[][], x: string): number[] {
         let frame_index: number = env.length - 1
-        while (frame_index >= 0 && this.value_index(env[frame_index--], x) === -1) {}
+        while (frame_index >= 0 && this.value_index(env[frame_index], x) === -1) {
+            frame_index -= 1
+        }
         if (frame_index < 0) {
             throw new Error(`Variable ${x} has not been declared`);
         }

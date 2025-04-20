@@ -32,6 +32,7 @@ export class RustVirtualMachine {
     }
 
     run(instrs: any[]) {
+        console.log(instrs)
         //print_code()
         this.initialize_machine()
         while (! (instrs[this.PC].tag === 'DONE')) {
@@ -46,6 +47,7 @@ export class RustVirtualMachine {
         }
         //display(OS, "\nfinal operands:           ")
         //print_OS()
+        console.log(this.OS)
         return this.heap.address_to_JS_value(this.OS[0])
     }
 
@@ -65,6 +67,7 @@ export class RustVirtualMachine {
 
     // v2 is popped before v1
     private apply_binop(op: string, v2: number, v1: number): number {
+        console.log(this.heap.address_to_JS_value(v2))
         return this.heap.JS_value_to_address(RustVirtualMachine.binop_microcode[op]
             (this.heap.address_to_JS_value(v1),
             this.heap.address_to_JS_value(v2)))
@@ -156,6 +159,8 @@ export class RustVirtualMachine {
             this.E = this.heap.heap_get_Blockframe_environment(this.RTS.pop()),
     LD:
         instr => {
+            console.log(this.heap.heap_get_Environment_value(this.E, instr.pos))
+            console.log(instr.pos)
             const val = this.heap.heap_get_Environment_value(this.E, instr.pos)
             if (this.heap.is_Unassigned(val))
                 throw new Error("access of unassigned variable")
@@ -177,7 +182,7 @@ export class RustVirtualMachine {
     CALL:
         instr => {
             const arity = instr.arity
-            const fun = this.OS[arity]
+            const fun = this.OS[this.OS.length - 1 - arity]
             if (this.heap.is_Builtin(fun)) {
                 return this.apply_builtin(this.heap.heap_get_Builtin_id(fun))
             }

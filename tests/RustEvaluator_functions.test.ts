@@ -61,7 +61,7 @@ describe('Function Tests', () => {
                 let result: number = a + b;
                 result
             }
-            add(3, 7);
+            add(3, 7)
         `);
 
         expect(result).toBe(10);
