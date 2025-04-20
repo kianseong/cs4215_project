@@ -60,10 +60,6 @@ export class RustCompileTimeEnvironment {
         return [...cv].concat(new_frame)
     }
 
-    static compile_time_variable_property(cv: any[], frame_index: number, symbol: string) {
-        return cv[frame_index][symbol]
-    }
-
     static compile_time_environment_position(env: string[][], x: string): number[] {
         let frame_index: number = env.length - 1
         while (frame_index >= 0 && this.value_index(env[frame_index], x) === -1) {

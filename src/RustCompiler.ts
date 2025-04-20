@@ -10,6 +10,17 @@ export class RustCompiler {
         this.instrs = []
     }
 
+    find_all_variables_moved(expr: any, ce: string[][], is_decl: boolean, new_pos: number[] = [-1, -1]): any[][] {
+        let vars_moved: any[][] = []
+        if (expr.tag === "nam") {
+            let [frame_index, var_index] = RustCompileTimeEnvironment.compile_time_environment_position(ce, expr.sym)
+            if (is_decl || (frame_index !== new_pos[0] || var_index !== new_pos[1])) {
+                vars_moved.push([frame_index, ce[frame_index][var_index]])
+            }    
+        }
+        return vars_moved
+    }
+
     scan_for_locals(comps: any[]): any[] {
         let locals = []
         let locals_properties = {}
@@ -19,7 +30,7 @@ export class RustCompiler {
                 if (comp.sym in locals_properties) {
                     throw new Error('Repeated variable declaration')
                 }
-                locals_properties[comp.sym] = {mut: comp.mut, type: comp.type, can_read: true, can_write: true}
+                locals_properties[comp.sym] = {mut: comp.mut, type: comp.type, can_read: true, can_write: true, owner: true}
             }
         }
         return [locals, locals_properties]
@@ -50,10 +61,14 @@ export class RustCompiler {
     nam:
         // store precomputed position information in LD instruction
         (comp, ce, cv) => {
+            let pos = RustCompileTimeEnvironment.compile_time_environment_position(
+                ce, comp.sym)
+            if (pos[0] > 1 && !cv[pos[0]][comp.sym].owner) {
+                throw new Error(`Variable ${comp.sym} has been moved`)
+            }
             this.instrs[this.wc++] = { tag: "LD",
                              sym: comp.sym,
-                             pos: RustCompileTimeEnvironment.compile_time_environment_position(
-                                      ce, comp.sym)
+                             pos: pos
                             }
         },
     unop:
@@ -101,17 +116,26 @@ export class RustCompiler {
             this.compile(comp.fun, ce, cv)
             for (let arg of comp.args) {
                 this.compile(arg, ce, cv)
+                let variables_moved = this.find_all_variables_moved(arg, ce, true)
+                for (let [frame, symbol] of variables_moved) {
+                    cv[frame][symbol].owner = false
+                }
             }
             this.instrs[this.wc++] = {tag: 'CALL', arity: comp.args.length}
         },
     assmt:
         // store precomputed position info in ASSIGN instruction
         (comp, ce, cv) => {
-            this.compile(comp.expr, ce, cv)
             let compile_time_position = RustCompileTimeEnvironment.compile_time_environment_position(
                 ce, comp.sym)
-            if (!RustCompileTimeEnvironment.compile_time_variable_property(cv, compile_time_position[0], comp.sym).mut) {
+            if (!cv[compile_time_position[0]][comp.sym].mut) {
                 throw new Error(`Trying to modify immutable variable ${comp.sym}`)
+            }
+            cv[compile_time_position[0]][comp.sym].owner = true
+            this.compile(comp.expr, ce, cv)
+            let variables_moved = this.find_all_variables_moved(comp.expr, ce, false, compile_time_position)
+            for (let [frame, symbol] of variables_moved) {
+                cv[frame][symbol].owner = false
             }
             this.instrs[this.wc++] = {tag: 'ASSIGN',
                             pos: compile_time_position}
@@ -127,10 +151,9 @@ export class RustCompiler {
             // extend compile-time environment
             let new_cv_frame = {}
             for (let prm of comp.prms) {
-                new_cv_frame[prm.sym] = {mut: true, type: prm.type, can_read: true, can_write: true}
+                new_cv_frame[prm.sym] = {mut: true, type: prm.type, can_read: true, can_write: true, owner: true}
             }
             let new_cv = [...cv]
-            console.log(new_cv)
             let new_env = [...ce]
             for (let i = 2; i < new_cv.length; i++) {
                 new_cv[i] = Object.fromEntries(Object.entries(new_cv[i]).filter(([var_name, var_properties]) => (var_properties as { type: string }).type === "function"))
@@ -162,6 +185,10 @@ export class RustCompiler {
     let:
         (comp, ce, cv) => {
             this.compile(comp.expr, ce, cv)
+            let variables_moved = this.find_all_variables_moved(comp.expr, ce, true)
+            for (let [frame, symbol] of variables_moved) {
+                cv[frame][symbol].owner = false
+            }
             this.instrs[this.wc++] = {tag: 'LET',
                             pos: RustCompileTimeEnvironment.compile_time_environment_position(
                                      ce, comp.sym)}
