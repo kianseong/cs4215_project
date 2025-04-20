@@ -14,7 +14,8 @@ export enum HeapTag {
     Null = 11,
     Unassigned = 12,
     Undefined = 13,
-    Free = 14 // New tag for free blocks
+    Free = 14, // New tag for free blocks
+    Array = 15 // New tag for arrays
 }
 
 export class Heap implements HeapInterface {
@@ -313,6 +314,13 @@ export class Heap implements HeapInterface {
                 this.address_to_JS_value(this.heap_get_child(address, 0)),
                 this.address_to_JS_value(this.heap_get_child(address, 1))
             ];
+        } else if (this.is_Array(address)) {
+            const size = this.heap_get_Array_size(address)
+            const result = []
+            for (let i = 0; i < size; i++) {
+                result.push(this.address_to_JS_value(this.heap_get_Array_element(address, i)))
+            }
+            return result
         } else if (this.is_Closure(address)) {
             return "<closure>";
         } else if (this.is_Builtin(address)) {
@@ -411,7 +419,7 @@ export class Heap implements HeapInterface {
     }
 
     public is_Number(address: number): boolean {
-        return this.heap_get_tag(address) === HeapTag.Number;
+        return this.get_tag(address) === HeapTag.Number
     }
 
     public is_Pair(address: number): boolean {
@@ -440,6 +448,35 @@ export class Heap implements HeapInterface {
 
     public is_Callframe(address: number): boolean {
         return this.heap_get_tag(address) === HeapTag.Callframe;
+    }
+
+    // Array methods
+    public heap_allocate_Array(size: number): number {
+        const address = this.allocate(HeapTag.Array, size + 1) // +1 for size field
+        this.heap_set_byte_at_offset(address, 1, size)
+        return address
+    }
+
+    public heap_get_Array_size(address: number): number {
+        return this.heap_get_byte_at_offset(address, 1)
+    }
+
+    public heap_get_Array_element(address: number, index: number): number {
+        if (index < 0 || index >= this.heap_get_Array_size(address)) {
+            throw new Error("Array index out of bounds")
+        }
+        return this.get(address + 1 + index)
+    }
+
+    public heap_set_Array_element(address: number, index: number, value: number): void {
+        if (index < 0 || index >= this.heap_get_Array_size(address)) {
+            throw new Error("Array index out of bounds")
+        }
+        this.set(address + 1 + index, value)
+    }
+
+    public is_Array(address: number): boolean {
+        return this.get_tag(address) === HeapTag.Array
     }
 
     // Utils

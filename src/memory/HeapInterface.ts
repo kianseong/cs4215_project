@@ -4,6 +4,10 @@ export interface HeapInterface {
 
     Unassigned: number
 
+    True: number
+
+    False: number
+
     display(): void    
 
     initialise_empty_heap(): HeapInterface
@@ -86,4 +90,10 @@ export interface HeapInterface {
 
     allocate_literal_values()
 
+    // Array methods
+    heap_allocate_Array(size: number): number
+    heap_get_Array_size(address: number): number
+    heap_get_Array_element(address: number, index: number): number
+    heap_set_Array_element(address: number, index: number, value: number): void
+    is_Array(address: number): boolean
 }

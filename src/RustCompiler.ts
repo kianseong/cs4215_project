@@ -167,7 +167,16 @@ export class RustCompiler {
                 ce)
         },
     empty:
-        (comp, ce) => {}
+        (comp, ce) => {},
+    arr_lit:
+        (comp, ce) => {
+            // First compile all array elements
+            for (let elem of comp.elems) {
+                this.compile(elem, ce)
+            }
+            // Create array with the compiled elements
+            this.instrs[this.wc++] = {tag: 'ARRAY', size: comp.elems.length}
+        }
     }
 
     // compile component into instruction array instrs,

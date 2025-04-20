@@ -226,6 +226,16 @@ export class RustVirtualMachine {
             } else {
             this.PC--
             }
+        },
+    ARRAY:
+        instr => {
+            const size = instr.size
+            const array_address = this.heap.heap_allocate_Array(size)
+            // Pop elements from the stack and store them in the array
+            for (let i = size - 1; i >= 0; i--) {
+                this.heap.heap_set_Array_element(array_address, i, this.OS.pop())
+            }
+            this.OS.push(array_address)
         }
     }
 
