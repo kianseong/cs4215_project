@@ -14,3 +14,5 @@ dist/
 
 #!.yarn/cache
 .pnp.*
+
+.antlr
