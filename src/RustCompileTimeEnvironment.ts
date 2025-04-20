@@ -22,10 +22,10 @@ export class RustCompileTimeEnvironment {
                             const hd = OS.pop()
                             return heap.heap_allocate_Pair(hd, tl)
                         },
-        is_pair       : (OS: any[], heap: HeapInterface): boolean => heap.is_Pair(OS.pop()) ? heap.JS_value_to_address(true) : heap.JS_value_to_address(false),
+        is_pair       : (OS: any[], heap: HeapInterface): number => heap.is_Pair(OS.pop()) ? heap.JS_value_to_address(true) : heap.JS_value_to_address(false),
         head          : (OS: any[], heap: HeapInterface): number => heap.heap_get_child(OS.pop(), 0),
         tail          : (OS: any[], heap: HeapInterface): number => heap.heap_get_child(OS.pop(), 1),
-        is_null       : (OS: any[], heap: HeapInterface): boolean => heap.is_Null(OS.pop()) ? heap.JS_value_to_address(true) : heap.JS_value_to_address(false),
+        is_null       : (OS: any[], heap: HeapInterface): number => heap.is_Null(OS.pop()) ? heap.JS_value_to_address(true) : heap.JS_value_to_address(false),
         set_head      : (OS: any[], heap: HeapInterface) => {
                             const val = OS.pop()
                             const p = OS.pop()
