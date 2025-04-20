@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach } from 'vitest';
 import { RustEvaluator } from '../src/RustEvaluator';
 import type { IRunnerPlugin } from 'conductor/dist/conductor/runner/types';
 
-describe('Function Tests', () => {
+describe('Test RustEvaluator with full Rust programs - focusing on testing functions', () => {
     let mockConductor: IRunnerPlugin;
     let rustEvaluator: RustEvaluator;
 
@@ -136,7 +136,7 @@ describe('Function Tests', () => {
 
     test('testing function early return nothing', () => {
         const result = rustEvaluator.evaluate(`
-            let x: number = 0;
+            let mut x: number = 0;
             fn earlyReturn() {
                 1 + 1;
                 return;

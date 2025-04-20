@@ -5,6 +5,7 @@ export class RustCompileTimeEnvironment {
     static builtins: { [key: string]: any }
     static builtin_array: any[]
     static global_compile_environment: string[][]
+    static global_variable_properties: any[]
 
     // in this machine, the builtins take their
     // arguments directly from the operand stack,
@@ -55,6 +56,14 @@ export class RustCompileTimeEnvironment {
         return [...e].concat([vs])
     }
 
+    static compile_time_variable_properties_extend(new_frame: any, cv: any[]) {
+        return [...cv].concat(new_frame)
+    }
+
+    static compile_time_variable_property(cv: any[], frame_index: number, symbol: string) {
+        return cv[frame_index][symbol]
+    }
+
     static compile_time_environment_position(env: string[][], x: string): number[] {
         let frame_index: number = env.length - 1
         while (frame_index >= 0 && this.value_index(env[frame_index], x) === -1) {
@@ -91,6 +100,7 @@ export class RustCompileTimeEnvironment {
         let builtin_compile_frame: string[] = Object.keys(RustCompileTimeEnvironment.builtins)
         let constant_compile_frame: string[] = Object.keys(RustCompileTimeEnvironment.constants)
         RustCompileTimeEnvironment.global_compile_environment = [builtin_compile_frame, constant_compile_frame]
+        RustCompileTimeEnvironment.global_variable_properties = [{}, {}]
     }
 
 }

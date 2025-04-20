@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach } from 'vitest';
 import { RustEvaluator } from '../src/RustEvaluator';
 import type { IRunnerPlugin } from 'conductor/dist/conductor/runner/types';
 
-describe('Function Tests', () => {
+describe('Test RustEvaluator with full Rust programs - focusing on testing that value and non value producing blocks are handled correctly', () => {
     let mockConductor: IRunnerPlugin;
     let rustEvaluator: RustEvaluator;
 
@@ -75,7 +75,7 @@ describe('Function Tests', () => {
                     x = x - 1;
                     x;
                 }
-                let y: number = 10;
+                let mut y: number = 10;
                 while (y > 1) {
                     y = y - 1;
                     y
