@@ -264,6 +264,21 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing borro
     expect(result).toBe(5);
   });
 
+  test('Immutably borrowing variables through function calls should prevent owner from accessing', () => {
+    const rustEvaluator = new RustEvaluator(mockConductor);
+
+    const result = rustEvaluator.evaluate(`
+        let x: number = 5;
+        fn square(x: &mut number) -> number {
+            return x * x;
+        }
+        square(&mut x);
+        square(&mut x)
+    `);
+
+    expect(result).toBe(25);
+  });
+
   test('Immutably borrowing variables through function calls should prevent it from being modified', () => {
     const rustEvaluator = new RustEvaluator(mockConductor);
 

@@ -24,6 +24,23 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing funct
         expect(throwError).toThrow('Variable x has not been declared');
       });
 
+      test('nested functions', () => {
+        const rustEvaluator = new RustEvaluator(mockConductor);
+    
+        const result = rustEvaluator.evaluate(`
+            let x: number = 5;
+            fn add_nested(y: number) -> number {
+                fn add(z: number) -> number {
+                    return z + 1;
+                }
+                return add(y);
+            }
+            add_nested(x)
+        `);
+    
+        expect(result).toBe(6);
+      });
+
       test('function should not be able to read variables declared outside', () => {
         const rustEvaluator = new RustEvaluator(mockConductor);
     

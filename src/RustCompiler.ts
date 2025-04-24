@@ -141,7 +141,7 @@ export class RustCompiler {
         let exiting_frame = cv.at(-1)
         for (let nam of Object.keys(exiting_frame)) {
             let owner = exiting_frame[nam].owner
-            if (owner[0] === curr_frame && owner[1] === nam) {
+            if (owner == null || owner[0] === curr_frame && owner[1] === nam) {
                 continue
             }
             if (exiting_frame[nam].can_write) {
