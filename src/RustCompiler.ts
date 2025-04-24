@@ -241,15 +241,18 @@ export class RustCompiler {
     app:
         (comp, ce, cv) => {
             this.compile(comp.fun, ce, cv)
+            let new_cv = RustCompileTimeEnvironment.compile_time_variable_properties_extend({}, cv)
+            let frame_index = new_cv.length - 1
 
             for (let i = 0; i < comp.args.length; i++) {
                 let arg = comp.args[i]
                 this.compile(arg, ce, cv)
-                let frame_index = ce.length - 1
-                cv[frame_index][i] = {mut: true, type: arg.type, borrow_read: 0, borrow_write: 0, owner: [frame_index, i], can_read: true, can_write: true}
-                this.update_all_owner_borrow_relationships(arg, [frame_index, i], ce, cv)
+                
+                new_cv[frame_index][i] = {mut: true, type: arg.type, borrow_read: 0, borrow_write: 0, owner: [frame_index, i], can_read: true, can_write: true}
+                this.update_all_owner_borrow_relationships(arg, [frame_index, i], ce, new_cv)
             }
             this.instrs[this.wc++] = {tag: 'CALL', arity: comp.args.length}
+            this.release_borrowed_variables(new_cv)
         },
     assmt:
         // store precomputed position info in ASSIGN instruction
@@ -277,7 +280,8 @@ export class RustCompiler {
             let new_cv = [...cv]
             let new_env = [...ce]
             for (let i = 2; i < new_cv.length; i++) {
-                new_cv[i] = Object.fromEntries(Object.entries(new_cv[i]).filter(([var_name, var_properties]) => (var_properties as { type: string }).type === "function"))
+                new_cv[i] = Object.fromEntries(Object.entries(new_cv[i])
+                    .filter(([var_name, var_properties]) => (var_properties as { type: string }).type === "function"))
                 new_env[i] = new_env[i].filter(var_name => var_name in new_cv[i])
             }
 

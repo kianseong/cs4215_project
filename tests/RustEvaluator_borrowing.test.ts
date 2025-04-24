@@ -232,21 +232,6 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing borro
     expect(result).toBe(25);
   });
 
-  test('Immutably borrowing variables through function calls should prevent owner from accessing', () => {
-    const rustEvaluator = new RustEvaluator(mockConductor);
-
-    const throwError = () => rustEvaluator.evaluate(`
-        let x: number = 5;
-        fn square(x: &mut number) -> number {
-            return x * x;
-        }
-        square(&mut x);
-        x
-    `);
-
-    expect(throwError).toThrow('Variable x has been borrowed mutably and cannot be read from.');
-  });
-
   test('Immutably borrowing variables through nested function calls should allow owner to access', () => {
     const rustEvaluator = new RustEvaluator(mockConductor);
 
@@ -267,7 +252,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing borro
   test('Immutably borrowing variables through function calls should prevent owner from accessing', () => {
     const rustEvaluator = new RustEvaluator(mockConductor);
 
-    const throwError = () => rustEvaluator.evaluate(`
+    const result = rustEvaluator.evaluate(`
         let x: number = 5;
         fn square(x: &mut number) -> number {
             return x * x;
@@ -276,22 +261,7 @@ describe('Test RustEvaluator with full Rust programs - focusing on testing borro
         x
     `);
 
-    expect(throwError).toThrow('Variable x has been borrowed mutably and cannot be read from.');
-  });
-
-  test('Immutably borrowing variables through function calls should prevent owner from accessing', () => {
-    const rustEvaluator = new RustEvaluator(mockConductor);
-
-    const throwError = () => rustEvaluator.evaluate(`
-        let x: number = 5;
-        fn square(x: &mut number) -> number {
-            return x * x;
-        }
-        square(&mut x);
-        x
-    `);
-
-    expect(throwError).toThrow('Variable x has been borrowed mutably and cannot be read from.');
+    expect(result).toBe(5);
   });
 
   test('Immutably borrowing variables through function calls should prevent it from being modified', () => {
